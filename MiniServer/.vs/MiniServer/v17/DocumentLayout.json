@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\mrsen\\source\\repos\\MiniServer\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D2EE9975-9F71-4096-B2E4-3263C4FD1AEB}|MiniServer.csproj|c:\\users\\mrsen\\source\\repos\\miniserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2EE9975-9F71-4096-B2E4-3263C4FD1AEB}|MiniServer.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2EE9975-9F71-4096-B2E4-3263C4FD1AEB}|MiniServer.csproj|c:\\users\\mrsen\\source\\repos\\miniserver\\services\\greeterservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2EE9975-9F71-4096-B2E4-3263C4FD1AEB}|MiniServer.csproj|solutionrelative:services\\greeterservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2EE9975-9F71-4096-B2E4-3263C4FD1AEB}|MiniServer.csproj|c:\\users\\mrsen\\source\\repos\\miniserver\\protos\\greet.proto||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{D2EE9975-9F71-4096-B2E4-3263C4FD1AEB}|MiniServer.csproj|solutionrelative:protos\\greet.proto||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GreeterService.cs",
+              "DocumentMoniker": "C:\\Users\\mrsen\\source\\repos\\MiniServer\\Services\\GreeterService.cs",
+              "RelativeDocumentMoniker": "Services\\GreeterService.cs",
+              "ToolTip": "C:\\Users\\mrsen\\source\\repos\\MiniServer\\Services\\GreeterService.cs",
+              "RelativeToolTip": "Services\\GreeterService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-27T19:59:34.724Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "greet.proto",
+              "DocumentMoniker": "C:\\Users\\mrsen\\source\\repos\\MiniServer\\Protos\\greet.proto",
+              "RelativeDocumentMoniker": "Protos\\greet.proto",
+              "ToolTip": "C:\\Users\\mrsen\\source\\repos\\MiniServer\\Protos\\greet.proto",
+              "RelativeToolTip": "Protos\\greet.proto",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003853|",
+              "WhenOpened": "2024-04-27T19:59:25.933Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\mrsen\\source\\repos\\MiniServer\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\mrsen\\source\\repos\\MiniServer\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-27T19:59:20.966Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
