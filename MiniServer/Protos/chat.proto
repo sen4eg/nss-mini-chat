@@ -1,0 +1,130 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "MiniServer";
+
+package MiniChat;
+
+service Chat {
+    rpc Register(RegisterRequest) returns (RegisterResponse) {}
+    rpc Connect(ConnectRequest) returns (ConnectResponse) {}
+    rpc RefreshToken(RefreshTokenRequest) returns (ConnectResponse) {}
+    rpc Message(stream CommunicationRequest) returns (stream CommunicationResponse) {} // Pipe for messages
+}
+
+message RefreshTokenRequest {
+    string name = 1;
+    string refresh_token = 2;
+}
+
+message RegisterRequest {
+    string name = 1;
+    string password = 2;
+    string email = 3;
+}
+
+message RegisterResponse {
+    bool is_succeed = 1;
+}
+
+message ConnectRequest {
+    string name = 1;
+    string password = 2;
+}
+
+message ConnectResponse {
+    bool is_succeed = 1;
+    string token = 2;
+    string refresh_token = 3;
+}
+
+// --- MESSAGES ---
+
+message Message {
+    int64 id = 1;
+    int64 author_id = 6;
+    int64 receiver_id = 2; // serves to distinguish between group and user messages
+    int64 responses_to = 4;
+    string message = 3;
+    bytes attachment = 5; // if message is empty and attachment is not, then it's an attachment message type
+}
+
+message DeleteMessageRequest {
+    int64 id = 1;
+}
+
+message DeleteMessageResponse {
+    int64 id = 1;
+    bool is_succeed = 2;
+}
+
+message GeneralEvent{
+    string name = 1;
+    string content = 2;
+}
+
+message CommunicationRequest {
+    string token = 7;
+    oneof content {
+        Message message = 1;
+        DeleteMessageRequest delete_message = 2;
+        CreateGroupRequest create_group = 3;
+        DeleteGroupRequest delete_group = 4;
+        AddMemberRequest add_member = 5;
+        RemoveMemberRequest remove_member = 6;
+    }
+}
+
+message CommunicationResponse {
+    oneof content {
+        Message message = 1;
+        DeleteMessageResponse delete_message = 2;
+        CreateGroupResponse create_group = 3;
+        DeleteGroupResponse delete_group = 4;
+        AddMemberResponse add_member = 5;
+        RemoveMemberResponse remove_member = 6;
+    }
+}
+
+
+// --- GROUPS ---
+
+message CreateGroupRequest {
+    string name = 1;
+    string description = 2;
+    int64 members = 3;
+}
+
+message CreateGroupResponse {
+    bool is_succeed = 1;
+}
+
+message DeleteGroupRequest {
+    int64 id = 1;
+}
+
+message DeleteGroupResponse {
+    bool is_succeed = 1;
+}
+
+// TODO add permission logic
+message AddMemberRequest {
+    int64 group_id = 1;
+    int64 member_id = 2;
+}
+
+message AddMemberResponse {
+    bool is_succeed = 1;
+    string error_msg = 2;
+}
+
+message RemoveMemberRequest {
+    int64 group_id = 1;
+    int64 member_id = 2;
+}
+
+message RemoveMemberResponse {
+    bool is_succeed = 1;
+    string error_msg = 2;
+}
+
+

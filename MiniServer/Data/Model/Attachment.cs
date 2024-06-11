@@ -4,6 +4,12 @@ namespace MiniServer.Data.Model;
 
 public class Attachment
 {
+    public Attachment(byte[] content, string filename, Message message) {
+        Content = content;
+        Filename = filename;
+        Message = message;
+    }
+
     [Key]
     public int AttachmentId { get; set; }
 

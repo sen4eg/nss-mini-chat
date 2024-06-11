@@ -6,6 +6,13 @@ namespace MiniServer.Data.Model;
 
 public class GroupRole
 {
+    public GroupRole(string role, User user, Group group, List<Permission> permissions) {
+        Role = role;
+        User = user;
+        Group = group;
+        Permissions = permissions;
+    }
+
     [Key]
     public int GroupRoleId { get; set; }
 

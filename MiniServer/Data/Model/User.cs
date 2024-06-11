@@ -3,6 +3,12 @@
 namespace MiniServer.Data.Model;
 
 public class User {
+    public User(int userId, string username, string password, string email) {
+        UserId = userId;
+        Username = username;
+        Password = password;
+        Email = email;
+    }
     [Key] public int UserId { get; set; }
 
     [Required] public string Username { get; set; }
