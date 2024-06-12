@@ -10,7 +10,7 @@ public class ChatContext : DbContext{
     }
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Message> Messages { get; set; }
+    public DbSet<MiniServer.Data.Model.Message> Messages { get; set; }
     public DbSet<Attachment> Attachments { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<GroupSetting> GroupSettings { get; set; }
@@ -36,12 +36,12 @@ public class ChatContext : DbContext{
             .WithMany(g => g.GroupRoles)
             .HasForeignKey(gr => gr.GroupId);
 
-        modelBuilder.Entity<Message>()
+        modelBuilder.Entity<MiniServer.Data.Model.Message>()
             .HasOne(m => m.Sender)
             .WithMany(u => u.SentMessages)
             .HasForeignKey(m => m.UserId);
 
-        modelBuilder.Entity<Message>()
+        modelBuilder.Entity<MiniServer.Data.Model.Message>()
             .HasMany(m => m.Attachments)
             .WithOne(a => a.Message)
             .HasForeignKey(a => a.MessageId);
