@@ -20,4 +20,6 @@ public class User {
 
     // Navigation property for contacts related to this user
     public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+    
+    public ICollection<AuthenicatedToken> AuthenicatedTokens { get; set; } = new List<AuthenicatedToken>();
 }

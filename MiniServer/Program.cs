@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MiniServer.Core;
 using MiniServer.Data;
+using MiniServer.Data.Repository;
 using MiniServer.Services;
 
 namespace MiniServer
@@ -19,8 +20,12 @@ namespace MiniServer
             });
             builder.Services.AddSingleton<EventDispatcher>();
             builder.Services.AddTransient<IChatLogicService, ChatLogicService>(); // Register the business logic service
+            builder.Services.AddTransient<IAuthenticationService, AuthenticationService>(); // Register the business logic service
             builder.Services.AddTransient<ChatService>(); // Register the gRPC service
-
+            
+            builder.Services.AddTransient<IUserRepository, UserRepository>(); 
+            builder.Services.AddTransient<IValidationTokenRepository, ValidationTokenRepository>(); 
+            
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())

@@ -31,7 +31,7 @@ namespace MiniServer.Services
             //
             var registerEvent = new RegisterEvent(request, _chatLogicService, () =>
             {
-                _logger.LogInformation($"Registering user {request.Name}");
+                _logger.LogInformation($"Registering user {request.Credentials.Name}");
             });
 
             // Enqueue the event to be processed asynchronously

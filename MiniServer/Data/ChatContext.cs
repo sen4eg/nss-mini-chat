@@ -18,7 +18,7 @@ public class ChatContext : DbContext{
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<Contact> Contacts { get; set; }
     public DbSet<ContactType> ContactTypes { get; set; }
-
+    public DbSet<AuthenicatedToken> ValidationTokens { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -80,5 +80,11 @@ public class ChatContext : DbContext{
             .HasOne(c => c.ContactType)
             .WithMany(ct => ct.Contacts)
             .HasForeignKey(c => c.ContactTypeId);
+        
+        modelBuilder.Entity<AuthenicatedToken>()
+            .HasOne(at => at.User)
+            .WithMany(u => u.AuthenicatedTokens)
+            .HasForeignKey(at => at.Username) // Specify the foreign key property
+            .HasPrincipalKey(u => u.Username); // Specify the principal key property
     }
 }

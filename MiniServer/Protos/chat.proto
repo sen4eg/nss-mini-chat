@@ -11,15 +11,27 @@ service Chat {
     rpc Message(stream CommunicationRequest) returns (stream CommunicationResponse) {} // Pipe for messages
 }
 
+message Device {
+    string name = 1; // device name
+    string os = 2; // device os
+    string ip = 3; // device ip
+}
+
+message Credentials {
+    string name = 1;
+    string password = 2;
+}
+
 message RefreshTokenRequest {
     string name = 1;
     string refresh_token = 2;
+    Device device = 3;
 }
 
 message RegisterRequest {
-    string name = 1;
-    string password = 2;
+    Credentials credentials = 1;
     string email = 3;
+    Device device = 4;
 }
 
 message RegisterResponse {
@@ -30,8 +42,11 @@ message RegisterResponse {
 }
 
 message ConnectRequest {
-    string name = 1;
-    string password = 2;
+    oneof creds{
+        Credentials credentials = 1;
+        string token = 2;
+    }
+    Device device = 4;
 }
 
 message ConnectResponse {
