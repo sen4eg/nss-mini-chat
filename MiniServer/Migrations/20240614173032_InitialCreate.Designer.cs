@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MiniServer.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20240611144831_InitialCreate")]
+    [Migration("20240614173032_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

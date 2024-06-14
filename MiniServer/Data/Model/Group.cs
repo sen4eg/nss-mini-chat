@@ -5,12 +5,6 @@ namespace MiniServer.Data.Model;
 
 public class Group
 {
-    public Group(string name, string description, User creatorUser) {
-        Name = name;
-        Description = description;
-        CreatorUser = creatorUser;
-    }
-
     [Key]
     public int GroupId { get; set; }
 

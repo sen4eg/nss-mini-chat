@@ -4,11 +4,6 @@ namespace MiniServer.Data.Model;
 
 public class Message
 {
-    public Message(string content, User sender) {
-        Content = content;
-        Sender = sender;
-    }
-
     [Key]
     public int MessageId { get; set; }
 

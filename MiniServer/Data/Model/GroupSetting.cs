@@ -4,11 +4,6 @@ namespace MiniServer.Data.Model;
 
 public class GroupSetting
 {
-    public GroupSetting(string name, string value, Group group) {
-        Name = name;
-        Value = value;
-        Group = group;
-    }
 
     [Key]
     public int GroupSettingId { get; set; }

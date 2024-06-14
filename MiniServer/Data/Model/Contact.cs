@@ -4,11 +4,6 @@ namespace MiniServer.Data.Model;
 
 public class Contact
 {
-    public Contact(User user, ContactType contactType) {
-        User = user;
-        ContactType = contactType;
-    }
-
     [Key]
     public int ContactId { get; set; }
 
