@@ -1,22 +1,38 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\",
+  "WorkspaceRootPath": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|c:\\users\\mrsen\\source\\repos\\minichat\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|c:\\users\\mrsen\\source\\repos\\minichat\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|c:\\users\\mrsen\\source\\repos\\minichat\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|e:\\skola\\vejska\\nss\\semestralka\\nss-minichat-app\\minichat\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|c:\\users\\mrsen\\source\\repos\\minichat\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|e:\\skola\\vejska\\nss\\semestralka\\nss-minichat-app\\minichat\\viewmodel\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:viewmodel\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|e:\\skola\\vejska\\nss\\semestralka\\nss-minichat-app\\minichat\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|e:\\skola\\vejska\\nss\\semestralka\\nss-minichat-app\\minichat\\loginpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:loginpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|e:\\skola\\vejska\\nss\\semestralka\\nss-minichat-app\\minichat\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|e:\\skola\\vejska\\nss\\semestralka\\nss-minichat-app\\minichat\\registrationpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:registrationpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|e:\\skola\\vejska\\nss\\semestralka\\nss-minichat-app\\minichat\\registrationpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:registrationpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|e:\\skola\\vejska\\nss\\semestralka\\nss-minichat-app\\minichat\\viewmodel\\registrationviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE92A1E1-26BC-45E7-BB31-026909A5302C}|MiniChat.csproj|solutionrelative:viewmodel\\registrationviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,53 +47,105 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
-              "ToolTip": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\Properties\\launchSettings.json",
-              "RelativeToolTip": "Properties\\launchSettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-04-27T19:48:56.805Z",
+              "Title": "MainPage.xaml.cs",
+              "DocumentMoniker": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\MainPage.xaml.cs",
+              "RelativeDocumentMoniker": "MainPage.xaml.cs",
+              "ToolTip": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\MainPage.xaml.cs*",
+              "RelativeToolTip": "MainPage.xaml.cs*",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAQwBkAAABDAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-16T15:22:47.092Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "MainPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MainPage.xaml.cs",
-              "RelativeDocumentMoniker": "MainPage.xaml.cs",
-              "ToolTip": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MainPage.xaml.cs",
-              "RelativeToolTip": "MainPage.xaml.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "DocumentIndex": 4,
+              "Title": "MainPage.xaml",
+              "DocumentMoniker": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\MainPage.xaml",
+              "RelativeDocumentMoniker": "MainPage.xaml",
+              "ToolTip": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\MainPage.xaml*",
+              "RelativeToolTip": "MainPage.xaml*",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAACUAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-06-16T15:21:01.106Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "RegistrationPage.xaml.cs",
+              "DocumentMoniker": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\RegistrationPage.xaml.cs",
+              "RelativeDocumentMoniker": "RegistrationPage.xaml.cs",
+              "ToolTip": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\RegistrationPage.xaml.cs",
+              "RelativeToolTip": "RegistrationPage.xaml.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-27T19:48:30.938Z",
+              "WhenOpened": "2024-06-09T14:17:56.266Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "RegistrationPage.xaml",
+              "DocumentMoniker": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\RegistrationPage.xaml",
+              "RelativeDocumentMoniker": "RegistrationPage.xaml",
+              "ToolTip": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\RegistrationPage.xaml",
+              "RelativeToolTip": "RegistrationPage.xaml",
+              "ViewState": "AQIAADkAAAAAAAAAAAAAABkAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-06-09T14:14:59.541Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "RegistrationViewModel.cs",
+              "DocumentMoniker": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\ViewModel\\RegistrationViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModel\\RegistrationViewModel.cs",
+              "ToolTip": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\ViewModel\\RegistrationViewModel.cs",
+              "RelativeToolTip": "ViewModel\\RegistrationViewModel.cs",
+              "ViewState": "AQIAABQAAAAAAAAAAAAQwCQAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-09T14:14:33.528Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "MainPage.xaml",
-              "DocumentMoniker": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MainPage.xaml",
-              "RelativeDocumentMoniker": "MainPage.xaml",
-              "ToolTip": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MainPage.xaml",
-              "RelativeToolTip": "MainPage.xaml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-04-27T19:48:29.416Z",
+              "Title": "LoginViewModel.cs",
+              "DocumentMoniker": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\ViewModel\\LoginViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModel\\LoginViewModel.cs",
+              "ToolTip": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\ViewModel\\LoginViewModel.cs",
+              "RelativeToolTip": "ViewModel\\LoginViewModel.cs",
+              "ViewState": "AQIAACgAAAAAAAAAAAAIwDgAAABUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-09T09:05:51.11Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LoginPage.xaml.cs",
+              "DocumentMoniker": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\LoginPage.xaml.cs",
+              "RelativeDocumentMoniker": "LoginPage.xaml.cs",
+              "ToolTip": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\LoginPage.xaml.cs",
+              "RelativeToolTip": "LoginPage.xaml.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-08T09:26:13.589Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "MauiProgram.cs",
-              "DocumentMoniker": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MauiProgram.cs",
-              "RelativeDocumentMoniker": "MauiProgram.cs",
-              "ToolTip": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MauiProgram.cs",
-              "RelativeToolTip": "MauiProgram.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-27T19:46:59.491Z",
+              "Title": "LoginPage.xaml",
+              "DocumentMoniker": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\LoginPage.xaml",
+              "RelativeDocumentMoniker": "LoginPage.xaml",
+              "ToolTip": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\LoginPage.xaml",
+              "RelativeToolTip": "LoginPage.xaml",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAACgAAABTAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-06-08T09:25:43.316Z",
               "EditorCaption": ""
             }
           ]

@@ -57,10 +57,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\MiniServer\Protos\chat.proto" GrpcServices="Client" Link="Protos\chat.proto"/>
+		<Protobuf Include="..\MiniServer\Protos\chat.proto" GrpcServices="Client" Link="Protos\chat.proto" />
 	</ItemGroup>
 	
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
 		<PackageReference Include="Grpc.Tools" Version="2.64.0">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

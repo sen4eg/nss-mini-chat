@@ -30,6 +30,13 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Fill" />
+
+            <Button
+                 x:Name="LoginBtn"
+                 Text="Login" 
+                 SemanticProperties.Hint="Login page"
+                 Clicked="OnLoginClicked"
+                 HorizontalOptions="Fill" />    
         </VerticalStackLayout>
     </ScrollView>
 

@@ -1,1 +1,1 @@
-C:\Users\mrsen\source\repos\MiniChat\MiniChat.csproj;x64
+E:\Skola\Vejska\NSS\Semestralka\nss-minichat-app\MiniChat\MiniChat.csproj;x64

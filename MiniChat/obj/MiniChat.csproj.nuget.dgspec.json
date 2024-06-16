@@ -1,24 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MiniChat.csproj": {}
+    "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\MiniChat.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MiniChat.csproj": {
+    "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\MiniChat.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MiniChat.csproj",
+        "projectUniqueName": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\MiniChat.csproj",
         "projectName": "MiniChat",
-        "projectPath": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\MiniChat.csproj",
-        "packagesPath": "C:\\Users\\mrsen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mrsen\\source\\repos\\MiniChat\\obj\\",
+        "projectPath": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\MiniChat.csproj",
+        "packagesPath": "C:\\Users\\beloh\\.nuget\\packages\\",
+        "outputPath": "E:\\Skola\\Vejska\\NSS\\Semestralka\\nss-minichat-app\\MiniChat\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\mrsen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\beloh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -66,6 +66,20 @@
         "net8.0-android34.0": {
           "targetAlias": "net8.0-android",
           "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.2.2, )"
+            },
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.57.0, )"
+            },
+            "Grpc.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.64.0, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[8.0.0, )"
@@ -109,6 +123,16 @@
         "net8.0-ios17.2": {
           "targetAlias": "net8.0-ios",
           "dependencies": {
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.57.0, )"
+            },
+            "Grpc.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.64.0, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[8.0.0, )"
@@ -152,6 +176,16 @@
         "net8.0-maccatalyst17.2": {
           "targetAlias": "net8.0-maccatalyst",
           "dependencies": {
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.57.0, )"
+            },
+            "Grpc.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.64.0, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[8.0.0, )"
@@ -196,6 +230,20 @@
         "net8.0-windows10.0.19041": {
           "targetAlias": "net8.0-windows10.0.19041.0",
           "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.2.2, )"
+            },
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.57.0, )"
+            },
+            "Grpc.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.64.0, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[8.0.0, )"

@@ -20,6 +20,11 @@
 
             SemanticScreenReader.Announce(CounterBtn.Text);
         }
+
+        private void OnLoginClicked(object sender, EventArgs e)
+        {
+            App.Current.MainPage.Navigation.PushAsync(new LoginPage());
+        }
     }
 
 }
