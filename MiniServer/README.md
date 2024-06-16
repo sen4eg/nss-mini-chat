@@ -8,7 +8,8 @@
 
 ### How to startup
 1. Install docker-compose or docker desktop ui and run docker-compose.yml to startup database
-2. Start the Program.cs file in root of the project
+2. Prepare database using ```dotnet ef update``` command
+3. Start the Program.cs file in root of the project
 
 
 

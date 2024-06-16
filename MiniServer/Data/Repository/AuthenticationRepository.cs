@@ -8,6 +8,7 @@ public interface IValidationTokenRepository {
     Task StoreToken(string username, Device device, string token);
     Task DeleteToken(string username, string device);
     Task<bool> TokenExists(RefreshTokenRequest requestRefreshToken);
+    Task<string> FindToken(string credentialsName, Device requestDevice);
 }
 
 public class ValidationTokenRepository : IValidationTokenRepository {
@@ -47,5 +48,35 @@ public class ValidationTokenRepository : IValidationTokenRepository {
             requestRefreshToken.Device.Name,
             requestRefreshToken.RefreshToken
         );
+    }
+    
+    public async Task<string> FindToken(string credentialsName, Device requestDevice)
+    {
+        // Add null checks for input parameters
+        if (string.IsNullOrEmpty(credentialsName))
+        {
+            throw new ArgumentNullException(nameof(credentialsName));
+        }
+
+        if (requestDevice == null || string.IsNullOrEmpty(requestDevice.Name))
+        {
+            throw new ArgumentNullException(nameof(requestDevice));
+        }
+
+        try
+        {
+            var tokenEntity = await _context.ValidationTokens
+                .FirstOrDefaultAsync(t => t.Username == credentialsName && t.Device == requestDevice.Name);
+
+            // Return the token if found, otherwise return an empty string
+            return tokenEntity?.Token ?? string.Empty; // or you can return a default value like "N/A" if desired
+        }
+        catch (Exception ex)
+        {
+            // throw;
+            
+        }
+
+        return "";
     }
 }

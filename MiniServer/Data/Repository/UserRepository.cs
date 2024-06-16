@@ -8,6 +8,7 @@ namespace MiniServer.Data.Repository;
 public interface IUserRepository
 {
     Task<bool> UserExistsAsync(string email, string name);
+    Task<bool> CredsExistsAsync(string name, string password);
     Task CreateUserAsync(string name, string email, string password);
 }
 
@@ -23,6 +24,10 @@ public class UserRepository : IUserRepository
     public async Task<bool> UserExistsAsync(string email, string name)
     {
         return await _context.Users.AnyAsync(u => u.Email == email || u.Username == name);
+    }
+
+    public Task<bool> CredsExistsAsync(string name, string password) {
+        return _context.Users.AnyAsync(u => u.Username == name && u.Password == password);
     }
 
     public async Task CreateUserAsync(string name, string email, string password)

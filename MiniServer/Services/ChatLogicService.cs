@@ -13,6 +13,7 @@ namespace MiniServer.Services
     {
         Task<RegisterResponse> RegisterAsync(RegisterRequest request);
         // Add other methods as needed
+        Task<ConnectResponse> ConnectAsync(ConnectRequest request);
     }
 
     public class ChatLogicService : IChatLogicService
@@ -63,6 +64,10 @@ namespace MiniServer.Services
             };
 
             return response;
+        }
+
+        public Task<ConnectResponse> ConnectAsync(ConnectRequest request) {
+            return _authenticationService.Authenticate(request);
         }
 
         private bool IsValidPassword(string password)

@@ -20,3 +20,31 @@ public class RegisterEvent : EventBase<RegisterResponse>
         return await _chatLogicService.RegisterAsync(_request);
     }
 }
+
+public class ConnectEvent : EventBase<ConnectResponse> {
+    private readonly ConnectRequest _request;
+    private readonly IChatLogicService _chatLogicService;
+
+    public ConnectEvent(ConnectRequest request, IChatLogicService chatLogicService, Action action) : base(action) {
+        this._request = request;
+        this._chatLogicService = chatLogicService;
+    }
+
+    protected override async Task<ConnectResponse> ExecuteAsync() {
+        return await _chatLogicService.ConnectAsync(_request);
+    }
+}
+
+public class RefreshTokenEvent : EventBase<ConnectResponse> {
+    private readonly RefreshTokenRequest _request;
+    private readonly IAuthenticationService _authenticationService;
+
+    public RefreshTokenEvent(RefreshTokenRequest request, IAuthenticationService authenticationService, Action action) : base(action) {
+        this._request = request;
+        this._authenticationService = authenticationService;
+    }
+
+    protected override async Task<ConnectResponse> ExecuteAsync() {
+        return await _authenticationService.RefreshTokenAsync(_request);
+    }
+}

@@ -42,10 +42,7 @@ message RegisterResponse {
 }
 
 message ConnectRequest {
-    oneof creds{
-        Credentials credentials = 1;
-        string token = 2;
-    }
+    Credentials credentials = 1;
     Device device = 4;
 }
 
