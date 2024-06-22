@@ -1,14 +1,13 @@
 ﻿using MiniServer.Services;
 
-namespace MiniServer.Events;
-
+namespace MiniServer.Core.Events;
 public class RegisterEvent : EventBase<RegisterResponse>
 {
     private readonly RegisterRequest _request;
     private readonly IChatLogicService _chatLogicService;
 
-    public RegisterEvent(RegisterRequest request, IChatLogicService chatLogicService, Action logic)
-        : base(logic)
+    public RegisterEvent(RegisterRequest request, IChatLogicService chatLogicService, Action sideEffect)
+        : base(sideEffect)
     {
         _request = request;
         _chatLogicService = chatLogicService;
@@ -23,6 +22,7 @@ public class RegisterEvent : EventBase<RegisterResponse>
 
 public class ConnectEvent : EventBase<ConnectResponse> {
     private readonly ConnectRequest _request;
+        // any way it can be injected?
     private readonly IChatLogicService _chatLogicService;
 
     public ConnectEvent(ConnectRequest request, IChatLogicService chatLogicService, Action action) : base(action) {

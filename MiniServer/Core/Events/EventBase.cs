@@ -1,20 +1,43 @@
-﻿namespace MiniServer.Events; 
-using System.Threading.Tasks;
+﻿namespace MiniServer.Core.Events; 
 
 public abstract class EventBase<T>
 {
-    private readonly Action _logic;
+    private readonly Action _sideEffect;
 
-    protected EventBase(Action logic)
+    protected EventBase(Action sideEffect)
     {
-        _logic = logic;
+        _sideEffect = sideEffect;
     }
 
     protected abstract Task<T> ExecuteAsync();
 
-    public Task<T> Execute()
+    public async void Execute(TaskCompletionSource<T> taskCompletionSource)
     {
-        _logic?.Invoke();
-        return ExecuteAsync();
+        try
+        {
+            _sideEffect?.Invoke();
+
+            // Execute asynchronously and set the result or handle exceptions
+            await ExecuteAsync().ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    taskCompletionSource.SetException(task.Exception);
+                }
+                else if (task.IsCanceled)
+                {
+                    taskCompletionSource.SetCanceled();
+                }
+                else
+                {
+                    taskCompletionSource.SetResult(task.Result);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            taskCompletionSource.SetException(e);
+        }
     }
+    
 }

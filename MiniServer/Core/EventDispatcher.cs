@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using MiniServer.Events;
 
 namespace MiniServer.Core {
     public class EventDispatcher {

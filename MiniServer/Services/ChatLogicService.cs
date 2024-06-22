@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MiniServer.Core;
 using MiniServer.Data.Repository;
-using MiniServer.Events;
 
 namespace MiniServer.Services
 {

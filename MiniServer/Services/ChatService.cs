@@ -1,83 +1,70 @@
 ﻿using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using MiniServer.Events;
 using MiniServer.Services;
 using System.Threading.Tasks;
+using Google.Protobuf;
 using MiniServer.Core;
+using MiniServer.Core.Events;
 
 namespace MiniServer.Services
 {
     public class ChatService : Chat.ChatBase {
         private readonly ILogger<ChatService> _logger;
         private readonly EventDispatcher _eventDispatcher;
-        private readonly IChatLogicService _chatLogicService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly ICommEventFactory _commEventFactory;
 
         public ChatService(ILogger<ChatService> logger, EventDispatcher eventDispatcher,
-            IChatLogicService chatLogicService, IAuthenticationService authenticationService) {
+            ICommEventFactory commEventFactory) {
             _logger = logger;
             _eventDispatcher = eventDispatcher;
-            _chatLogicService = chatLogicService;
-            _authenticationService = authenticationService;
+             _commEventFactory = commEventFactory;
         }
+        private Task<TResponse> HandleEventAsync<TResponse>(EventBase<TResponse> eventBase, Action? logAction = null)
+        {
+            TaskCompletionSource<TResponse> taskCompletionSource = new TaskCompletionSource<TResponse>();
 
-        public override Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context) {
-            var registerEvent = new RegisterEvent(request, _chatLogicService,
-                () => { _logger.LogInformation($"Registering user {request.Credentials.Name}"); });
-
-            // Enqueue the event to be processed asynchronously
-            var taskCompletionSource = new TaskCompletionSource<RegisterResponse>();
-
-            _eventDispatcher.EnqueueEvent(async () => {
-                try {
-                    var response = await registerEvent.Execute();
-                    taskCompletionSource.SetResult(response);
+            _eventDispatcher.EnqueueEvent(() =>
+            {
+                try
+                {
+                    eventBase.Execute(taskCompletionSource);
                 }
-                catch (Exception ex) {
-                    taskCompletionSource.SetException(ex);
+                catch (Exception e)
+                {
+                    taskCompletionSource.SetException(e);
                 }
+                
+                return taskCompletionSource.Task;
             });
 
-            // Return the task completion source's task
             return taskCompletionSource.Task;
         }
 
-        public override Task<ConnectResponse> Connect(ConnectRequest request, ServerCallContext context) {
-            var connectEvent = new ConnectEvent(request, _chatLogicService,
-                () => { _logger.LogInformation($"Connecting user {request.Credentials.Name}"); });
-            var taskCompletionSource = new TaskCompletionSource<ConnectResponse>();
+        public override Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
+        {
+            // Use the factory to create the event
+            RegisterEvent registerEvent = _commEventFactory.Create<RegisterEvent, RegisterResponse>(request, 
+                () => _logger.LogInformation($"Registering user {request.Credentials.Name}"));
 
-            _eventDispatcher.EnqueueEvent(async () => {
-                    try {
-                        var response = await connectEvent.Execute();
-                        taskCompletionSource.SetResult(response);
-                    }
-                    catch (Exception ex) {
-                        taskCompletionSource.SetException(ex);
-                    }
-                }
-            );
-            return taskCompletionSource.Task;
+            return HandleEventAsync(registerEvent);
         }
 
-        public override Task<ConnectResponse> RefreshToken(RefreshTokenRequest request, ServerCallContext context) {
-            var device = request.Device;
-            
-            var refreshTokenEvent = new RefreshTokenEvent(request, _authenticationService,
-                () => { _logger.LogInformation($"Refreshing token for user {request.Name}"); });
-            var taskCompletionSource = new TaskCompletionSource<ConnectResponse>();
+        public override Task<ConnectResponse> Connect(ConnectRequest request, ServerCallContext context)
+        {
+            // Use the factory to create the event
+            var connectEvent = _commEventFactory.Create<ConnectEvent, ConnectResponse>(request,
+                () => _logger.LogInformation($"Connecting user {request.Credentials.Name}"));
 
-            _eventDispatcher.EnqueueEvent(async () => {
-                    try {
-                        var response = await refreshTokenEvent.Execute();
-                        taskCompletionSource.SetResult(response);
-                    }
-                    catch (Exception ex) {
-                        taskCompletionSource.SetException(ex);
-                    }
-                }
-            );
-            return taskCompletionSource.Task;
+            return HandleEventAsync(connectEvent);
+        }
+
+        public override Task<ConnectResponse> RefreshToken(RefreshTokenRequest request, ServerCallContext context)
+        {
+            // Use the factory to create the event
+            var refreshTokenEvent = _commEventFactory.Create<RefreshTokenEvent, ConnectResponse>(request,
+                () => _logger.LogInformation($"Refreshing token for user {request.Name}"));
+
+            return HandleEventAsync(refreshTokenEvent);
         }
 
     }

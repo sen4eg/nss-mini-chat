@@ -24,8 +24,8 @@ namespace MiniServer
             builder.Services.AddTransient<ChatService>(); // Register the gRPC service
             
             builder.Services.AddTransient<IUserRepository, UserRepository>(); 
-            builder.Services.AddTransient<IValidationTokenRepository, ValidationTokenRepository>(); 
-            
+            builder.Services.AddTransient<IValidationTokenRepository, ValidationTokenRepository>();
+            builder.Services.AddSingleton<ICommEventFactory, CommEventFactory>();
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())
