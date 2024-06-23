@@ -11,7 +11,7 @@ public abstract class EventBase<T>
 
     protected abstract Task<T> ExecuteAsync();
 
-    public async void Execute(TaskCompletionSource<T> taskCompletionSource)
+    public async Task Execute(TaskCompletionSource<T> taskCompletionSource)
     {
         try
         {

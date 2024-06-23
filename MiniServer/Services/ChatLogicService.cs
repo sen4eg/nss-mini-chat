@@ -37,7 +37,7 @@ namespace MiniServer.Services
                     ErrorMsg = "User with such username or email already exists."
                 };
             }
-
+            
             // Validate password
             if (!IsValidPassword(request.Credentials.Password))
             {
@@ -47,10 +47,10 @@ namespace MiniServer.Services
                     ErrorMsg = "Password does not meet the required criteria."
                 };
             }
-
+            
             // Create user in the repository
             await _userRepository.CreateUserAsync(request.Credentials.Name, request.Email, request.Credentials.Password);
-
+            
             // Generate tokens
             var token = _authenticationService.GenerateToken(request.Credentials.Name);
             var refreshToken = _authenticationService.GenerateRefreshToken(request.Credentials.Name, request.Device);

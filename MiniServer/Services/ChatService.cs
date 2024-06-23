@@ -23,18 +23,16 @@ namespace MiniServer.Services
         {
             TaskCompletionSource<TResponse> taskCompletionSource = new TaskCompletionSource<TResponse>();
 
-            _eventDispatcher.EnqueueEvent(() =>
+            _eventDispatcher.EnqueueEvent(async () =>
             {
                 try
                 {
-                    eventBase.Execute(taskCompletionSource);
+                    await eventBase.Execute(taskCompletionSource);
                 }
                 catch (Exception e)
                 {
                     taskCompletionSource.SetException(e);
                 }
-                
-                return taskCompletionSource.Task;
             });
 
             return taskCompletionSource.Task;

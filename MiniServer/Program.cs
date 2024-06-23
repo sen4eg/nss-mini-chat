@@ -17,15 +17,16 @@ namespace MiniServer
             builder.Services.AddDbContext<ChatContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("ChatContext"));
-            });
+            }, ServiceLifetime.Singleton);
+            
             builder.Services.AddSingleton<EventDispatcher>();
             builder.Services.AddTransient<IChatLogicService, ChatLogicService>(); // Register the business logic service
             builder.Services.AddTransient<IAuthenticationService, AuthenticationService>(); // Register the business logic service
             builder.Services.AddTransient<ChatService>(); // Register the gRPC service
             
-            builder.Services.AddTransient<IUserRepository, UserRepository>(); 
-            builder.Services.AddTransient<IValidationTokenRepository, ValidationTokenRepository>();
-            builder.Services.AddSingleton<ICommEventFactory, CommEventFactory>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>(); 
+            builder.Services.AddScoped<IValidationTokenRepository, ValidationTokenRepository>();
+            builder.Services.AddTransient<ICommEventFactory, CommEventFactory>();
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())
