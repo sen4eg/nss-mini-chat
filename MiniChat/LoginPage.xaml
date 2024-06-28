@@ -33,14 +33,14 @@
                     <Entry Placeholder="Username" Text="{Binding Username}" Keyboard="Email" FontSize="18" HeightRequest="50" />
                     
                     <!-- Password Entry -->
-                    <Entry Placeholder="Password" IsPassword="{Binding IsPasswordHidden}" Text="{Binding Password}" FontSize="18"  HeightRequest="50" />
+                    <Entry Placeholder="Password" IsPassword="{Binding HidePassword}" Text="{Binding Password}" FontSize="18"  HeightRequest="50" />
 
-                    <!-- Switch to show/hide password -->
+                    <!-- Check to show password -->
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
                         <Label Text="Show Password" VerticalOptions="Center" FontSize="14" />
-                        <Switch IsToggled="{Binding IsPasswordVisible}" VerticalOptions="Center" />
+                        <CheckBox IsChecked="{Binding ShowPassword}" />
                     </StackLayout>
-
+                    
                     <!-- Login Button -->
                     <Button Text="Login"
                             Command="{Binding LoginCommand}"

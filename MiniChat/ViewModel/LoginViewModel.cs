@@ -18,9 +18,12 @@ namespace MiniChat.ViewModel
         private string _password;
 
         [ObservableProperty]
-        private bool _isPasswordVisible;
+        private bool _showPassword;
 
-        public bool IsPasswordHidden => !IsPasswordVisible;
+        public bool HidePassword
+        {
+            get { return !ShowPassword; }
+        }
 
         public ICommand LoginCommand { get; }
         public ICommand ForgotPasswordCommand { get; }
@@ -31,12 +34,19 @@ namespace MiniChat.ViewModel
             LoginCommand = new AsyncRelayCommand(OnLoginAsync);
             ForgotPasswordCommand = new RelayCommand(OnForgotPassword);
             CreateAccountCommand = new AsyncRelayCommand(OnCreateAccountAsync);
-            IsPasswordVisible = false;
+            Username = Password = "";
+            ShowPassword = false;
+        }
+
+        private bool verifyPassword()
+        {
+            //TODO password verification with server
+            return Username == "admin" && Password == "password";
         }
 
         private async Task OnLoginAsync()
         {
-            if (Username == "admin" && Password == "password")
+            if (verifyPassword())
             {
                 // Navigate to the next page
                 await App.Current.MainPage.Navigation.PushAsync(new MainPage());
@@ -44,12 +54,15 @@ namespace MiniChat.ViewModel
             else
             {
                 await App.Current.MainPage.DisplayAlert("Login Failed", "Invalid Username or Password", "OK");
+
+                // Clear password field
+                Password = "";
             }
         }
 
         private void OnForgotPassword()
         {
-            App.Current.MainPage.DisplayAlert("Login Failed", "Invalid Username or Password", "OK");
+            App.Current.MainPage.DisplayAlert("Feature not implemented", "This feature is not implemented", "Bruh");
         }
 
         private async Task OnCreateAccountAsync()
@@ -57,9 +70,10 @@ namespace MiniChat.ViewModel
             await App.Current.MainPage.Navigation.PushAsync(new RegistrationPage());
         }
 
-        partial void OnIsPasswordVisibleChanged(bool value)
+        partial void OnShowPasswordChanged(bool value)
         {
-            OnPropertyChanged(nameof(IsPasswordHidden));
+            //Update display password property
+            OnPropertyChanged(nameof(HidePassword));
         }
     }
 }
