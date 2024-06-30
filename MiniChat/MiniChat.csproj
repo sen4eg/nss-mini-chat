@@ -57,5 +57,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Generated\" />
+  </ItemGroup>
+	<Target Name="RunPowerShellScript" BeforeTargets="BeforeBuild">
+		<Exec Command="powershell.exe -ExecutionPolicy Bypass -File &quot;$(ProjectDir)generate_transport_layer.ps1&quot; --onbuild" ConsoleToMSBuild="true" />
+	</Target>
+
 
 </Project>

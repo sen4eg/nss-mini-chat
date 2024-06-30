@@ -96,11 +96,12 @@ namespace MiniChat
 
             channel.Dispose(); // dispose at end to ensure ports are freed
 
-            ConnectionObj obj = new ConnectionObj(); // You'll have some class alike this to store connection to server
-
-            obj.reader = reader;
-            obj.writer = reqstream;
-            obj.channel = channel;
+            ConnectionObj obj = new ConnectionObj
+            {
+                reader = reader,
+                writer = reqstream,
+                channel = channel
+            }; // You'll have some class alike this to store connection to server
 
             // connection data is to be stored for time of client app is open
         }
