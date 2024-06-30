@@ -1,14 +1,14 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "MiniServer";
+option csharp_namespace = "MiniProtoImpl";
 
-package MiniChat;
+package MiniProto;
 
 service Chat {
     rpc Register(RegisterRequest) returns (RegisterResponse) {}
     rpc Connect(ConnectRequest) returns (ConnectResponse) {}
     rpc RefreshToken(RefreshTokenRequest) returns (ConnectResponse) {}
-    rpc Message(stream CommunicationRequest) returns (stream CommunicationResponse) {} // Pipe for messages
+    rpc InitiateAsyncChannel(stream CommunicationRequest) returns (stream CommunicationResponse) {} // Pipe for messages
 }
 
 message Device {
