@@ -49,14 +49,14 @@ namespace MiniChat.ViewModel
             if (verifyPassword())
             {
                 // Navigate to the next page
-                await App.Current.MainPage.Navigation.PushAsync(new MainPage());
+                await App.Current.MainPage.Navigation.PushAsync(new ConversationSelectionPage());
             }
             else
             {
                 await App.Current.MainPage.DisplayAlert("Login Failed", "Invalid Username or Password", "OK");
 
                 // Clear password field
-                Password = "";
+                Password = string.Empty;
             }
         }
 
