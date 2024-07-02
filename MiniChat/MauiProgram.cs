@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
+using MiniChat.ViewModel;
 using MiniProtoImpl;
 namespace MiniChat
 {
@@ -16,6 +17,14 @@ namespace MiniChat
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+
+            // --------- ADD PAGES -----------
+            builder.Services.AddSingleton<ConversationSelectionPage>();
+            builder.Services.AddSingleton<ConversationSelectionViewModel>();
+
+            builder.Services.AddTransient<ConversationPage>();
+            builder.Services.AddTransient<ConversationViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();

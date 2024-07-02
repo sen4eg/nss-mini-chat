@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MiniChat.ConversationPage"
+             Title="ConversationPage"
+             xmlns:viewModel="clr-namespace:MiniChat.ViewModel"
+             x:DataType="viewModel:ConversationViewModel">
+
+    <Grid RowDefinitions="Auto, *"
+          Padding="8">
+
+        <CollectionView ItemsSource="{Binding Messages}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <ScrollView>
+                        <Label Text="{Binding .}" />
+                    </ScrollView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Add conversation collection view above this line -->
+
+        <Entry x:Name="editor"
+                   Grid.Row="1"
+                   VerticalOptions="End"
+                   Keyboard="Chat"
+                   Placeholder="Message"
+                   Text="{Binding MessageText}"
+                   ReturnCommand="{Binding SendMessageCommand}"
+                   />
+    </Grid>
+</ContentPage>

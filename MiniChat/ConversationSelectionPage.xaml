@@ -11,6 +11,11 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame BorderColor="Black" Padding="5" Margin="8">
+                        <!-- Add Gesture Recognizers for clicking on a conversation -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationSelectionViewModel}}, Path=TapConversationCommand}"/>
+                            </Frame.GestureRecognizers>
                         <Grid Padding="4">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>

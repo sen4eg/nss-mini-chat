@@ -63,10 +63,18 @@
 	<Target Name="RunPowerShellScript" BeforeTargets="BeforeBuild">
 		<Exec Command="powershell.exe -ExecutionPolicy Bypass -File &quot;$(ProjectDir)generate_transport_layer.ps1&quot; --onbuild" ConsoleToMSBuild="true" />
 	</Target>
+	<ItemGroup>
+	  <Compile Update="ConversationPage.xaml.cs">
+	    <DependentUpon>ConversationPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
 
 
   <ItemGroup>
     <MauiXaml Update="ConversationSelectionPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="ConversationPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>

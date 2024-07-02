@@ -4,9 +4,9 @@ using MiniChat.ViewModel;
 
 public partial class ConversationSelectionPage : ContentPage
 {
-	public ConversationSelectionPage()
+	public ConversationSelectionPage(ConversationSelectionViewModel vm)
 	{
 		InitializeComponent();
-		BindingContext = new ConversationSelectionViewModel();
+		BindingContext = vm;
 	}
 }

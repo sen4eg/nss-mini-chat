@@ -24,14 +24,11 @@ namespace MiniChat.ViewModel
         {
             get { return !ShowPassword; }
         }
-
-        public ICommand LoginCommand { get; }
         public ICommand ForgotPasswordCommand { get; }
         public ICommand CreateAccountCommand { get; }
 
         public LoginViewModel()
         {
-            LoginCommand = new AsyncRelayCommand(OnLoginAsync);
             ForgotPasswordCommand = new RelayCommand(OnForgotPassword);
             CreateAccountCommand = new AsyncRelayCommand(OnCreateAccountAsync);
             Username = Password = "";
@@ -44,12 +41,13 @@ namespace MiniChat.ViewModel
             return Username == "admin" && Password == "password";
         }
 
-        private async Task OnLoginAsync()
+        [RelayCommand]
+        async Task Login()
         {
             if (verifyPassword())
             {
                 // Navigate to the next page
-                await App.Current.MainPage.Navigation.PushAsync(new ConversationSelectionPage());
+                await Shell.Current.GoToAsync(nameof(ConversationSelectionPage));
             }
             else
             {

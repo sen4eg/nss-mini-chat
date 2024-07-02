@@ -32,10 +32,19 @@
                     <Label Text="Welcome Back!" FontSize="24" HorizontalOptions="Center" />
 
                     <!-- Username Entry -->
-                    <Entry Placeholder="Username" Text="{Binding Username}" Keyboard="Email" FontSize="18" HeightRequest="50" />
+                    <Entry Placeholder="Username"
+                           Text="{Binding Username}"
+                           Keyboard="Email"
+                           FontSize="18"
+                           HeightRequest="50"
+                           ReturnCommand="{Binding LoginCommand}" />
                     
                     <!-- Password Entry -->
-                    <Entry Placeholder="Password" IsPassword="{Binding HidePassword}" Text="{Binding Password}" FontSize="18"  HeightRequest="50" />
+                    <Entry Placeholder="Password"
+                           IsPassword="{Binding HidePassword}"
+                           Text="{Binding Password}"
+                           FontSize="18"  HeightRequest="50"
+                           ReturnCommand="{Binding LoginCommand}" />
 
                     <!-- Check to show password -->
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
