@@ -15,7 +15,7 @@ public class GroupSetting
     public string Value { get; set; }
 
     // Foreign key for the group this setting belongs to
-    public int GroupId { get; set; }
+    public long GroupId { get; set; }
 
     // Navigation property for the group this setting belongs to
     public Group Group { get; set; }

@@ -10,10 +10,10 @@ public class GroupRole
     public int GroupRoleId { get; set; }
 
     [ForeignKey("UserId")]
-    public int UserId { get; set; }
+    public long UserId { get; set; }
 
     [ForeignKey("GroupId")]
-    public int GroupId { get; set; }
+    public long GroupId { get; set; }
 
     [Required]
     public string Role { get; set; }

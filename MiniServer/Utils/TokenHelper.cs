@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using MiniServer.Services;
 
 namespace MiniServer.Utils; 
 
@@ -22,7 +23,7 @@ public static class TokenHelper
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, userId) }),
-            Expires = DateTime.UtcNow.AddMinutes(15), // Access token expires in 15 minutes
+            Expires = DateTime.UtcNow.AddMinutes(60), // Access token expires in 15 minutes
             Issuer = Issuer,
             Audience = Audience,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -65,6 +66,36 @@ public static class TokenHelper
         {
             // Log or handle exception as needed
             return false; // Token validation failed
+        }
+    }
+    public static string? GetUserIdFromClaimsPrincipal(ClaimsPrincipal principal)
+    {
+        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return userIdClaim;
+    }
+    public static void DecipherToken(string token, out ClaimsPrincipal o) {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(Secret);
+
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = Issuer,
+            ValidAudience = Audience,
+            ClockSkew = TimeSpan.Zero
+        };
+    
+        try {
+            var claimsPrincipal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var validatedToken);
+            o = claimsPrincipal;
+            return;
+        }
+        catch (Exception e) {
+            o = new ClaimsPrincipal();
+            return;
         }
     }
 }

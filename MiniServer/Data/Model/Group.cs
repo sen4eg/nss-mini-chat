@@ -6,7 +6,7 @@ namespace MiniServer.Data.Model;
 public class Group
 {
     [Key]
-    public int GroupId { get; set; }
+    public long GroupId { get; set; }
 
     [Required]
     public string Name { get; set; }

@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace MiniServer.Data.Model;
 
 public class User {
 
-    [Key] public int UserId { get; set; }
+    [Key]
+    public long UserId { get; set; }
 
     [Required] public string Username { get; set; }
 

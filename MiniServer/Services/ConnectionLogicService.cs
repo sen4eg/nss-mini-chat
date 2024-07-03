@@ -1,27 +1,27 @@
 ﻿using Grpc.Core;
 using System.Threading.Tasks;
+using MiniProtoImpl;
 using MiniServer.Core;
 using MiniServer.Data.Repository;
-using MiniServer.Events;
 
 namespace MiniServer.Services
 {
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
-    public interface IChatLogicService
+    public interface IConnectionLogicService
     {
         Task<RegisterResponse> RegisterAsync(RegisterRequest request);
         // Add other methods as needed
         Task<ConnectResponse> ConnectAsync(ConnectRequest request);
     }
 
-    public class ChatLogicService : IChatLogicService
+    public class ConnectionLogicService : IConnectionLogicService
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthenticationService _authenticationService;
 
-        public ChatLogicService(IUserRepository userRepository, IAuthenticationService authenticationService)
+        public ConnectionLogicService(IUserRepository userRepository, IAuthenticationService authenticationService)
         {
             _userRepository = userRepository;
             _authenticationService = authenticationService;
@@ -38,7 +38,7 @@ namespace MiniServer.Services
                     ErrorMsg = "User with such username or email already exists."
                 };
             }
-
+            
             // Validate password
             if (!IsValidPassword(request.Credentials.Password))
             {
@@ -48,12 +48,12 @@ namespace MiniServer.Services
                     ErrorMsg = "Password does not meet the required criteria."
                 };
             }
-
+            
             // Create user in the repository
-            await _userRepository.CreateUserAsync(request.Credentials.Name, request.Email, request.Credentials.Password);
-
+            var user = await _userRepository.CreateUserAsync(request.Credentials.Name, request.Email, request.Credentials.Password);
+            
             // Generate tokens
-            var token = _authenticationService.GenerateToken(request.Credentials.Name);
+            var token = _authenticationService.GenerateToken(user.UserId);
             var refreshToken = _authenticationService.GenerateRefreshToken(request.Credentials.Name, request.Device);
 
             var response = new RegisterResponse

@@ -7,7 +7,7 @@ public class Permission
 {
 
     [Key]
-    public int PermissionId { get; set; } // Primary key
+    public long PermissionId { get; set; } // Primary key
     public string PermissionName { get; set; } // Name of the permission
     public string Description { get; set; } // Description of the permission
 
