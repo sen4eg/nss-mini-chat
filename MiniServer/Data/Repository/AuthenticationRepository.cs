@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MiniServer.Data.Model;
-
+using MiniProtoImpl;
 namespace MiniServer.Data.Repository;
 
 public interface IValidationTokenRepository {
@@ -9,6 +9,8 @@ public interface IValidationTokenRepository {
     Task DeleteToken(string username, string device);
     Task<bool> TokenExists(RefreshTokenRequest requestRefreshToken);
     Task<string> FindToken(string credentialsName, Device requestDevice);
+    
+    Task<AuthenicatedToken?> FindAuthRefreshToken(string name, Device device);
 }
 
 public class ValidationTokenRepository : IValidationTokenRepository {
@@ -78,5 +80,9 @@ public class ValidationTokenRepository : IValidationTokenRepository {
         }
 
         return "";
+    }
+
+    public Task<AuthenicatedToken?> FindAuthRefreshToken(string name, Device device) {
+        return _context.ValidationTokens.Include(o => o.User).FirstOrDefaultAsync(t => t.Username == name && t.Device == device.Name);
     }
 }

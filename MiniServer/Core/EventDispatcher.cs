@@ -2,11 +2,16 @@
 
 namespace MiniServer.Core {
     public class EventDispatcher {
+        private readonly ILogger<EventDispatcher> _logger;
         private readonly BlockingCollection<Func<Task>> _eventQueue = new BlockingCollection<Func<Task>>();
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly Thread[] _threads;
 
-        public EventDispatcher(int threadCount = 4) {
+        public int GetLoad() {
+            return _eventQueue.Count;
+        }
+        public EventDispatcher(ILogger<EventDispatcher> logger, int threadCount = 8) {
+            _logger = logger;
             _threads = new Thread[threadCount];
             for (int i = 0; i < threadCount; i++) {
                 _threads[i] = new Thread(DispatchLoop);
@@ -23,10 +28,21 @@ namespace MiniServer.Core {
                 try {
                     var eventTask = _eventQueue.Take(_cancellationTokenSource.Token);
                     eventTask.Invoke().Wait(); // Wait for event execution
+                    continue;
                 }
                 catch (OperationCanceledException) {
                     // Thread exiting
                 }
+                catch (InvalidOperationException) {
+                    // Thrown by Take() when _eventQueue is marked as complete for adding
+                    // No need to handle this specifically unless necessary
+                }
+                catch (Exception ex) {
+                    // Handle any other unexpected exceptions
+                    _logger.LogError($"Exception in DispatchLoop: {ex}");
+                }
+        
+                Thread.Sleep(100); 
             }
         }
 

@@ -1,6 +1,10 @@
-﻿namespace MiniServer.Core.Events; 
+﻿namespace MiniServer.Core.Events;
 
-public abstract class EventBase<T>
+// public abstract class AbstractEvent {
+//     public abstract Task Execute(TaskCompletionSource<object> taskCompletionSource);
+// }
+
+public abstract class EventBase<T> 
 {
     private readonly Action _sideEffect;
 

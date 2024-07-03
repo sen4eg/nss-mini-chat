@@ -9,7 +9,9 @@ public interface IUserRepository
 {
     Task<bool> UserExistsAsync(string email, string name);
     Task<bool> CredsExistsAsync(string name, string password);
-    Task CreateUserAsync(string name, string email, string password);
+    Task<User> CreateUserAsync(string name, string email, string password);
+    ValueTask<User?> FindById(string id);
+    Task<long?> FindWithCredentials(string name, string password);
 }
 
 public class UserRepository : IUserRepository
@@ -30,7 +32,7 @@ public class UserRepository : IUserRepository
         return _context.Users.AnyAsync(u => u.Username == name && u.Password == password);
     }
 
-    public async Task CreateUserAsync(string name, string email, string password)
+    public async Task<User> CreateUserAsync(string name, string email, string password)
     {
         var user = new User
         {
@@ -41,5 +43,17 @@ public class UserRepository : IUserRepository
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
+        return user;
+    }
+
+    public ValueTask<User?> FindById(string id) {
+        return _context.Users.FindAsync(id);
+    }
+
+    public Task<long?> FindWithCredentials(string name, string password) {
+        return _context.Users
+            .Where(u => u.Username == name && u.Password == password)
+            .Select(u => (long?)u.UserId)
+            .FirstOrDefaultAsync();
     }
 }

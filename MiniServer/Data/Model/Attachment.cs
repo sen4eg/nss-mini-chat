@@ -5,7 +5,7 @@ namespace MiniServer.Data.Model;
 public class Attachment
 {
     [Key]
-    public int AttachmentId { get; set; }
+    public long AttachmentId { get; set; }
 
     [Required]
     public byte[] Content { get; set; }
@@ -14,7 +14,7 @@ public class Attachment
     public string Filename { get; set; }
 
     // Foreign key for the message this attachment belongs to
-    public int MessageId { get; set; }
+    public long MessageId { get; set; }
 
     // Navigation property for the message this attachment belongs to
     public MiniServer.Data.Model.Message Message { get; set; }

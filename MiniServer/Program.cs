@@ -3,6 +3,7 @@ using MiniServer.Core;
 using MiniServer.Data;
 using MiniServer.Data.Repository;
 using MiniServer.Services;
+using MiniServer.Services.Controller;
 
 namespace MiniServer
 {
@@ -10,6 +11,7 @@ namespace MiniServer
     {
         public static void Main(string[] args)
         {
+            // Config along with surprisingly "bean" type definition
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -20,13 +22,18 @@ namespace MiniServer
             }, ServiceLifetime.Singleton);
             
             builder.Services.AddSingleton<EventDispatcher>();
-            builder.Services.AddTransient<IChatLogicService, ChatLogicService>(); // Register the business logic service
+            builder.Services.AddTransient<IConnectionLogicService, ConnectionLogicService>(); // Register the business logic service
             builder.Services.AddTransient<IAuthenticationService, AuthenticationService>(); // Register the business logic service
             builder.Services.AddTransient<ChatService>(); // Register the gRPC service
             
-            builder.Services.AddScoped<IUserRepository, UserRepository>(); 
-            builder.Services.AddScoped<IValidationTokenRepository, ValidationTokenRepository>();
-            builder.Services.AddTransient<ICommEventFactory, CommEventFactory>();
+            builder.Services.AddSingleton<IUserRepository, UserRepository>();
+            builder.Services.AddSingleton<IMessageRepository, MessageRepository>();
+            builder.Services.AddSingleton<IValidationTokenRepository, ValidationTokenRepository>();
+            builder.Services.AddSingleton<IMessagingService, MessagingService>();
+            builder.Services.AddSingleton<ICommEventFactory, CommEventFactory>();
+            builder.Services.AddSingleton<IConnectionManager, ConnectionManager>();
+            builder.Services.AddTransient<IPersistenceService, PersistenceService>();
+            
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())
@@ -39,6 +46,10 @@ namespace MiniServer
             var dispatcher = app.Services.GetRequiredService<EventDispatcher>();
             dispatcher.Start(); // Start the dispatcher
 
+            dispatcher.EnqueueEvent(() => {
+                Console.WriteLine("Hello from the dispatcher!");
+                return Task.CompletedTask;
+            });
             // Configure the HTTP request pipeline.
             app.MapGrpcService<ChatService>();
             app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");

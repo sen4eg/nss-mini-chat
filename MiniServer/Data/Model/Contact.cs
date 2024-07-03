@@ -5,12 +5,12 @@ namespace MiniServer.Data.Model;
 public class Contact
 {
     [Key]
-    public int ContactId { get; set; }
+    public long ContactId { get; set; }
 
     // Other contact attributes can be added here
 
     // Foreign key for the user who owns this contact
-    public int UserId { get; set; }
+    public long UserId { get; set; }
 
     // Navigation property for the user who owns this contact
     public User User { get; set; }

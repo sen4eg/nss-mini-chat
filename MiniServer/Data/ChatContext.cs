@@ -8,6 +8,9 @@ public class ChatContext : DbContext{
     public ChatContext(DbContextOptions<ChatContext> options) : base(options)
     {
     }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+    }
 
     public DbSet<User> Users { get; set; }
     public DbSet<MiniServer.Data.Model.Message> Messages { get; set; }
@@ -46,6 +49,10 @@ public class ChatContext : DbContext{
             .WithOne(a => a.Message)
             .HasForeignKey(a => a.MessageId);
 
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+        
         modelBuilder.Entity<User>()  
             .HasMany(u => u.GroupRoles)
             .WithOne(gr => gr.User)
@@ -82,9 +89,9 @@ public class ChatContext : DbContext{
             .HasForeignKey(c => c.ContactTypeId);
         
         modelBuilder.Entity<AuthenicatedToken>()
-            .HasOne(at => at.User)
-            .WithMany(u => u.AuthenicatedTokens)
-            .HasForeignKey(at => at.Username) // Specify the foreign key property
-            .HasPrincipalKey(u => u.Username); // Specify the principal key property
+            .HasOne(u => u.User)
+            .WithMany(ut => ut.AuthenicatedTokens)
+            .HasForeignKey(t => t.Username)
+            .HasPrincipalKey(ut => ut.Username);
     }
 }
