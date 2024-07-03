@@ -23,7 +23,7 @@ public static class TokenHelper
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, userId) }),
-            Expires = DateTime.UtcNow.AddMinutes(15), // Access token expires in 15 minutes
+            Expires = DateTime.UtcNow.AddMinutes(60), // Access token expires in 15 minutes
             Issuer = Issuer,
             Audience = Audience,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

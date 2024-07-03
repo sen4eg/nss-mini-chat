@@ -72,6 +72,7 @@ namespace MiniServer.Core {
         }
 
         public Task HandleConnectedUser(UserConnection instream) {
+            MonitorConnection(instream);
             _connectedUsers.Add(instream);
             instream.SetRegistry(_registry);
             return Task.CompletedTask;
@@ -97,6 +98,24 @@ namespace MiniServer.Core {
 
             // Enqueue the next HandlePipesUpdate event
             _eventDispatcher.EnqueueEvent(HandlePipesUpdate);
+        }
+        private async void MonitorConnection(UserConnection userCon)
+        {
+            try
+            {
+                // Await the cancellation token to be triggered
+                await Task.Run(() => userCon.Context.CancellationToken.WaitHandle.WaitOne());
+            
+                // Handle disconnection
+                _connectedUsers.TryTake(out _);
+                userCon.Dispose();
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
+            {
+                // Handle the RpcException if the call is cancelled
+                _connectedUsers.TryTake(out _);
+                userCon.Dispose();
+            }
         }
 
         public IEnumerable<UserConnection>? GetOpenedConnection(long msgReceiverId) {
@@ -258,9 +277,15 @@ namespace MiniServer.Core {
             return false;
         }
         
-        public override int GetHashCode()
+        public override int GetHashCode() // TODO fix the bag
         {
             return _userCreds.UserId?.GetHashCode() ?? 0;
+        }
+
+        public void Dispose() {
+            Tcs.SetResult(true);
+            _registry?.RemoveUserConnection(this, _userCreds.UserId);
+            
         }
     }
 

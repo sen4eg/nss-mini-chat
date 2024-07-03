@@ -102,16 +102,32 @@ public class DeleteMessageEvent : EventBase<AuthorizedRequest<DeleteMessageReque
 
 
 public class RequestUpdateEvent : EventBase<AuthorizedRequest<RequestUpdate>> {
-    public RequestUpdateEvent(Action sideEffect) : base(sideEffect) { }
-    protected override Task<AuthorizedRequest<RequestUpdate>> ExecuteAsync() {
-        throw new NotImplementedException();
+    private readonly AuthorizedRequest<RequestUpdate> _authorizedRequest;
+    private readonly IMessagingService _messagingService;
+
+    public RequestUpdateEvent(AuthorizedRequest<RequestUpdate> authorizedRequest, IMessagingService messagingService,
+        Action sideEffect) : base(sideEffect) {
+        _authorizedRequest = authorizedRequest;
+        _messagingService = messagingService;
+    }
+    protected override async Task<AuthorizedRequest<RequestUpdate>> ExecuteAsync() {
+        await _messagingService.UpdateRequested(_authorizedRequest);
+        return _authorizedRequest;
     }
 }
 
 public class RequestDialogEvent : EventBase<AuthorizedRequest<RequestDialog>> {
-    public RequestDialogEvent(Action sideEffect) : base(sideEffect) { }
-    protected override Task<AuthorizedRequest<RequestDialog>> ExecuteAsync() {
-        throw new NotImplementedException();
+    private readonly AuthorizedRequest<RequestDialog> _authorizedRequest;
+    private readonly IMessagingService _messagingService;
+
+    public RequestDialogEvent(AuthorizedRequest<RequestDialog> request, IMessagingService messagingService,
+        Action sideEffect) : base(sideEffect) {
+        _authorizedRequest = request;
+        _messagingService = messagingService;
+    }
+    protected override async Task<AuthorizedRequest<RequestDialog>> ExecuteAsync() {
+        await _messagingService.DialogRequested(_authorizedRequest);
+        return _authorizedRequest;
     }
 }
 

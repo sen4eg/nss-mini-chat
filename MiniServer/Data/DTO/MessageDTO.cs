@@ -11,6 +11,13 @@ public class MessageDTO {
         this.ReceiverId = request.Request.ReceiverId;
         this.Timestamp = DateTime.UtcNow;
     }
+    
+    public MessageDTO(Data.Model.Message databaseMessage) {
+        this.Content = databaseMessage.Content;
+        this.UserId = databaseMessage.UserId;
+        this.ReceiverId = databaseMessage.ReceiverId;
+        this.Timestamp = DateTime.UtcNow;
+    }
 
     public long MessageId { get; set; }
 
