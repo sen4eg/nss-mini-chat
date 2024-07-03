@@ -66,8 +66,8 @@ namespace MiniChat
             // synchronous
             var response = client.Register(req);
             Console.WriteLine(response); // of type RegisterResponse
-            var _1hour_auth_token = response.Token;
-            var _keep_long_refresh_token = response.RefreshToken;
+            var _1hour_auth_token = response.Token;  // auth token for hour
+            var _keep_long_refresh_token = response.RefreshToken; // refresh token eternal 
             var _if_not_empty_something_wrong_error_msg = response.ErrorMsg;
 
             // async option
@@ -83,13 +83,21 @@ namespace MiniChat
 
             var communicationRequest = new CommunicationRequest
             {
-                Token = "auth_token from previous step",
+                Token = _1hour_auth_token, // "auth_token from previous step",
                 Message = new Message
                 {
                     ReceiverId = 2, // should be negative for groups, since groups have negative id
                     Message_ = "Hello there!"
                 }
             };
+
+
+            var newmsg = new MiniProtoImpl.Message 
+            {
+                Timestamp = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.UtcNow)
+            };
+            // Todo for later check if this is not broken frontend side
+            var date = newmsg.Timestamp.ToDateTime();
 
             await reqstream.WriteAsync(communicationRequest);
 
