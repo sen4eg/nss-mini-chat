@@ -1,0 +1,8 @@
+# Visual Studio files
+**/.vs/
+**/[Bb]in/
+**/[Oo]bj/
+**/[Dd]ebug/
+**/[Bb]uild/
+**/*.csproj.user
+**/[Gg]enerated

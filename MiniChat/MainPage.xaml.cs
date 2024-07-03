@@ -7,6 +7,7 @@
         public MainPage()
         {
             InitializeComponent();
+
         }
 
         private void OnCounterClicked(object sender, EventArgs e)
@@ -19,6 +20,11 @@
                 CounterBtn.Text = $"Clicked {count} times";
 
             SemanticScreenReader.Announce(CounterBtn.Text);
+        }
+
+        private void OnLoginClicked(object sender, EventArgs e)
+        {
+            App.Current.MainPage.Navigation.PushAsync(new LoginPage());
         }
     }
 

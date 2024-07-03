@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MiniChat.ConversationSelectionPage"
+             Title="ConversationSelectionPage"
+             xmlns:viewModel="clr-namespace:MiniChat.ViewModel"
+             x:DataType="viewModel:ConversationSelectionViewModel">
+    <ScrollView>
+    <VerticalStackLayout Padding="24, 4">
+        <CollectionView ItemsSource="{Binding Messages}" x:DataType="{x:Null}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="Black" Padding="5" Margin="8">
+                        <!-- Add Gesture Recognizers for clicking on a conversation -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationSelectionViewModel}}, Path=TapConversationCommand}"/>
+                            </Frame.GestureRecognizers>
+                        <Grid Padding="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="2*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" 
+                                   Grid.RowSpan="2"
+                                   Source="dotnet_bot.png"
+                                   Aspect="AspectFit"
+                                   HeightRequest="50"
+                                   WidthRequest="50"/>
+                            <!-- placeholder -->
+                            <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   FontAttributes="Bold"
+                                   Text="{Binding Sender}"/>
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   Text="{Binding Contents}"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
