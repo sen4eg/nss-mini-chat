@@ -6,9 +6,11 @@ using Grpc.Core;
 using MiniProtoImpl;
 using MiniServer.Core.Events;
 using MiniServer.Data.DTO;
+using MiniServer.Data.Model;
 using MiniServer.Data.Repository;
 using MiniServer.Services;
 using Npgsql.Replication.PgOutput.Messages;
+using Message = MiniProtoImpl.Message;
 
 namespace MiniServer.Core {
 
@@ -16,13 +18,10 @@ namespace MiniServer.Core {
         Task HandleConnectedUser(UserConnection instream);
         Task HandlePipesUpdate();
         IEnumerable<UserConnection>? GetOpenedConnection(long msgReceiverId);
+        Task HandleGroupCreated(Group group);
     }
 
     public class ConnectionManager : IConnectionManager {
-        private static readonly int PipeEmptyAmount = GetEnvironmentVariableInt("MINISERVER_PIPE_EMPTY_AMOUNT", DefaultPipeEmptyAmount);
-        private static readonly int PipeEmptyDelayMs = GetEnvironmentVariableInt("MINISERVER_PIPE_EMPTY_DELAY_MS", DefaultPipeEmptyDelayMs);
-        private static readonly int PipeUnloadedAmount = GetEnvironmentVariableInt("MINISERVER_PIPE_UNLOADED_AMOUNT", DefaultPipeUnloadedAmount);
-        private static readonly int PipeUnloadedDelayMs = GetEnvironmentVariableInt("MINISERVER_PIPE_UNLOADED_DELAY_MS", DefaultPipeUnloadedDelayMs);
         private readonly int _pipeEmptyAmount;
         private readonly int _pipeEmptyDelayMs;
         private readonly int _pipeUnloadedAmount;
@@ -122,6 +121,31 @@ namespace MiniServer.Core {
             return _registry.GetUserConnections(msgReceiverId);
         }
 
+        public Task HandleGroupCreated(Group group) {
+            var members = group.GroupRoles.Select(role => role.UserId).ToList();
+            var userConnections = new List<UserConnection>();
+            foreach (var member in members) {
+                var connections = _registry.GetUserConnections(member);
+                if (connections != null) {
+                    userConnections.AddRange(connections);
+                }
+            }
+            var response = new CommunicationResponse {
+                CreateGroup = new CreateGroupResponse {
+                    Id = group.GroupId,
+                    Name = group.Name,
+                    IsSucceed = true,
+                    AuthorId = group.CreatorUserId
+                }
+            };
+            foreach (var userConnection in userConnections) {
+                userConnection.ResponseStream.WriteAsync(response);
+            }
+            return Task.CompletedTask;
+        }
+        
+        
+
         private async Task HandleUserPipe(UserConnection user) {
             try {
                 await foreach (var msg in user.Reader) {
@@ -156,7 +180,7 @@ namespace MiniServer.Core {
                 case CommunicationRequest.ContentOneofCase.Message:
                     {
                         var evnt = _commEventFactory.Create<MessageSentEvent, AuthorizedRequest<Message>>(
-                            new AuthorizedRequest<Message>(Convert.ToInt64(userId), msg.Message),
+                            new AuthorizedRequest<Message>(Convert.ToInt64(userId), msg.Message, user),
                             () => _logger.LogInformation($"Message sent by {userId}"));
                         var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<Message>>();
                         _eventDispatcher.EnqueueEvent(async () =>
@@ -168,7 +192,7 @@ namespace MiniServer.Core {
                 case CommunicationRequest.ContentOneofCase.DeleteMessage:
                     {
                         var evnt = _commEventFactory.Create<DeleteMessageEvent, AuthorizedRequest<DeleteMessageRequest>>(
-                            new AuthorizedRequest<DeleteMessageRequest>(Convert.ToInt64(userId), msg.DeleteMessage),
+                            new AuthorizedRequest<DeleteMessageRequest>(Convert.ToInt64(userId), msg.DeleteMessage, user),
                             () => _logger.LogInformation($"Message deleted by {userId}"));
                         var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<DeleteMessageRequest>>();
                         _eventDispatcher.EnqueueEvent(async () =>
@@ -180,7 +204,7 @@ namespace MiniServer.Core {
                 case CommunicationRequest.ContentOneofCase.RequestUpdate:
                     {
                         var evnt = _commEventFactory.Create<RequestUpdateEvent, AuthorizedRequest<RequestUpdate>>(
-                            new AuthorizedRequest<RequestUpdate>(Convert.ToInt64(userId), msg.RequestUpdate),
+                            new AuthorizedRequest<RequestUpdate>(Convert.ToInt64(userId), msg.RequestUpdate, user),
                             () => _logger.LogInformation($"Request update by {userId}"));
                         var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<RequestUpdate>>();
                         _eventDispatcher.EnqueueEvent(async () =>
@@ -192,7 +216,7 @@ namespace MiniServer.Core {
                 case CommunicationRequest.ContentOneofCase.RequestDialog:
                     {
                         var evnt = _commEventFactory.Create<RequestDialogEvent, AuthorizedRequest<RequestDialog>>(
-                            new AuthorizedRequest<RequestDialog>(Convert.ToInt64(userId), msg.RequestDialog),
+                            new AuthorizedRequest<RequestDialog>(Convert.ToInt64(userId), msg.RequestDialog, user),
                             () => _logger.LogInformation($"Request dialog by {userId}"));
                         var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<RequestDialog>>();
                         _eventDispatcher.EnqueueEvent(async () =>
@@ -201,18 +225,32 @@ namespace MiniServer.Core {
                         });
                         break;
                     }
-                case CommunicationRequest.ContentOneofCase.CreateGroup:
-                    // Handle CreateGroup case if needed
+                case CommunicationRequest.ContentOneofCase.CreateGroup: 
+                {
+                    var evnt = _commEventFactory.Create<CreateGroupEvent, AuthorizedRequest<CreateGroupRequest>>(
+                        new AuthorizedRequest<CreateGroupRequest>(Convert.ToInt64(userId), msg.CreateGroup, user),
+                        () => _logger.LogInformation($"Group created by {userId}"));    
                     break;
-                case CommunicationRequest.ContentOneofCase.DeleteGroup:
-                    // Handle DeleteGroup case if needed
+                    
+                }
+                case CommunicationRequest.ContentOneofCase.DeleteGroup: {
+                    var evnt = _commEventFactory.Create<DeleteGroupEvent, AuthorizedRequest<DeleteGroupRequest>>(
+                        new AuthorizedRequest<DeleteGroupRequest>(Convert.ToInt64(userId), msg.DeleteGroup, user),
+                        () => _logger.LogInformation($"Group deleted by {userId}"));
                     break;
-                case CommunicationRequest.ContentOneofCase.AddMember:
-                    // Handle AddMember case if needed
+                }
+                case CommunicationRequest.ContentOneofCase.AddMember: {
+                    var evnt = _commEventFactory.Create<AddMemberEvent, AuthorizedRequest<AddMemberRequest>>(
+                        new AuthorizedRequest<AddMemberRequest>(Convert.ToInt64(userId), msg.AddMember, user),
+                        () => _logger.LogInformation($"Member added by {userId}"));
                     break;
-                case CommunicationRequest.ContentOneofCase.RemoveMember:
-                    // Handle RemoveMember case if needed
+                }
+                case CommunicationRequest.ContentOneofCase.RemoveMember: {
+                    var evnt = _commEventFactory.Create<RemoveMemberEvent, AuthorizedRequest<RemoveMemberRequest>>(
+                        new AuthorizedRequest<RemoveMemberRequest>(Convert.ToInt64(userId), msg.RemoveMember, user),
+                        () => _logger.LogInformation($"Member removed by {userId}"));
                     break;
+                }
                 case CommunicationRequest.ContentOneofCase.EditMessage:
                     // Handle EditMessage case if needed
                     break;

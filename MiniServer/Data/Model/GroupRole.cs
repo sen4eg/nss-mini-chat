@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MiniServer.Data.Model;
 
 
-public class GroupRole
+public sealed class GroupRole
 {
     [Key]
     public int GroupRoleId { get; set; }
@@ -16,11 +16,18 @@ public class GroupRole
     public long GroupId { get; set; }
 
     [Required]
-    public string Role { get; set; }
+    public int Role { get; set; }
 
     // Navigation properties
-    public virtual User User { get; set; }
-    public virtual Group Group { get; set; }
-    
-    public ICollection<Permission> Permissions { get; set; }
+    public User User { get; set; } = null!;
+    public Group? Group { get; set; }
+
+    public ICollection<Permission> Permissions { get; set; } = null!;
+    public GroupRole() { }
+
+    public GroupRole(long userId, Group group, GroupRoleTypes role) {
+        UserId = userId;
+        Group = group;
+        Role = (int)role;
+    }
 }

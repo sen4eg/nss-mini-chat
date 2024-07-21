@@ -1,6 +1,8 @@
 ﻿using MiniProtoImpl;
 using MiniServer.Data.DTO;
+using MiniServer.Data.Model;
 using MiniServer.Services;
+using Message = MiniProtoImpl.Message;
 
 namespace MiniServer.Core.Events;
 public class RegisterEvent : EventBase<RegisterResponse>
@@ -85,12 +87,14 @@ public class MessageSentEvent : EventBase<AuthorizedRequest<Message>> {
 }
 
 public class AuthorizedRequest<T> {
-    public long UserId;
-    public T Request;
+    public readonly long UserId;
+    public readonly T Request;
+    public readonly UserConnection UserConnection;
 
-    public AuthorizedRequest (long userId, T request) {
+    public AuthorizedRequest (long userId, T request, UserConnection userConnection) {
         UserId = userId;
         Request = request;
+        UserConnection = userConnection;
     }
 }
 public class DeleteMessageEvent : EventBase<AuthorizedRequest<DeleteMessageRequest>> {
@@ -141,5 +145,72 @@ public class MessagePersistanceEvent : EventBase<MessageDTO> {
     protected override async Task<MessageDTO> ExecuteAsync() {
         await _service.SaveAsync(_messageDto.ConvertToDbModel());
         return _messageDto;
+    }
+}
+
+
+public class CreateGroupEvent : EventBase<AuthorizedRequest<CreateGroupRequest>> {
+    private readonly AuthorizedRequest<CreateGroupRequest> _authorizedRequest;
+    private readonly IGroupService _groupService;
+    public CreateGroupEvent(AuthorizedRequest<CreateGroupRequest> authorizedRequest, IGroupService groupService, Action sideEffect) : base(sideEffect) {
+        _authorizedRequest = authorizedRequest;
+        _groupService = groupService;
+    }
+    protected override async Task<AuthorizedRequest<CreateGroupRequest>> ExecuteAsync() {
+        await _groupService.CreateGroup(_authorizedRequest);
+        return _authorizedRequest;
+    }
+}
+
+public class DeleteGroupEvent : EventBase<AuthorizedRequest<DeleteGroupRequest>> {
+    private readonly AuthorizedRequest<DeleteGroupRequest> _authorizedRequest;
+    private readonly IGroupService _groupService;
+    public DeleteGroupEvent(AuthorizedRequest<DeleteGroupRequest> authorizedRequest, IGroupService groupService, Action sideEffect) : base(sideEffect) {
+        _authorizedRequest = authorizedRequest;
+        _groupService = groupService;
+    }
+    protected override async Task<AuthorizedRequest<DeleteGroupRequest>> ExecuteAsync() {
+        await _groupService.DeleteGroup(_authorizedRequest);
+        return _authorizedRequest;
+    }
+}
+
+public class AddMemberEvent : EventBase<AuthorizedRequest<AddMemberRequest>> {
+    private readonly AuthorizedRequest<AddMemberRequest> _authorizedRequest;
+    private readonly IGroupService _groupService;
+    public AddMemberEvent(AuthorizedRequest<AddMemberRequest> authorizedRequest, IGroupService groupService, Action sideEffect) : base(sideEffect) {
+        _authorizedRequest = authorizedRequest;
+        _groupService = groupService;
+    }
+    protected override async Task<AuthorizedRequest<AddMemberRequest>> ExecuteAsync() {
+        await _groupService.AddMember(_authorizedRequest);
+        return _authorizedRequest;
+    }
+}
+
+public class RemoveMemberEvent : EventBase<AuthorizedRequest<RemoveMemberRequest>> {
+    private readonly AuthorizedRequest<RemoveMemberRequest> _authorizedRequest;
+    private readonly IGroupService _groupService;
+    public RemoveMemberEvent(AuthorizedRequest<RemoveMemberRequest> authorizedRequest, IGroupService groupService, Action sideEffect) : base(sideEffect) {
+        _authorizedRequest = authorizedRequest;
+        _groupService = groupService;
+    }
+    protected override async Task<AuthorizedRequest<RemoveMemberRequest>> ExecuteAsync() {
+        await _groupService.RemoveMember(_authorizedRequest);
+        return _authorizedRequest;
+    }
+}
+
+
+public class GroupCreatedEvent : EventBase<Group> {
+    private readonly Group _group;
+    private readonly IConnectionManager _connectionManager;
+    public GroupCreatedEvent(Group group, IConnectionManager connectionManager, Action sideEffect) : base(sideEffect) {
+        _group = group;
+        _connectionManager = connectionManager;
+    }
+    protected override async Task<Group> ExecuteAsync() {
+        _connectionManager.HandleGroupCreated(_group);
+        return _group;
     }
 }
