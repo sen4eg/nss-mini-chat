@@ -103,6 +103,17 @@ message RequestDialog {
 message RequestUpdate {
     int64 last_message_id = 1; // 0 for none
 }
+// response
+message DialogBody { // Batch of messages
+    int64 contact_id = 1; // 
+    repeated Message messages = 2;
+    int64 last_message_id = 3;
+}
+
+// request once on connect
+message RequestUpdate {
+    int64 last_message_id = 1; // 0 for none
+}
 
 message ContactsMessage {
     repeated Dialog dialogs = 1;
@@ -121,10 +132,20 @@ message EditMessageRequest { // Also updates a timestamp
     repeated Attachment attachment = 3;
 }
 
-message DialogBody { // Batch of messages
-    int64 contact_id = 1;
-    repeated Message messages = 2;
-    int64 last_message_id = 3;
+
+
+// Search for
+// 1 username
+// 2 email
+// 3 message
+message SearchRequest { 
+    string query = 1; 
+}
+
+message Contact{
+    string username = 1;
+    int64 uid = 2;
+    string status = 3; // Stranger, Contact, BlockedBy, BlockedHim
 }
 
 
@@ -179,7 +200,7 @@ message UserInfoResponse{
 message CommunicationRequest {
     string token = 7;
     oneof content {
-        Message message = 1;
+        Message message = 1; // sending a message
         DeleteMessageRequest delete_message = 2;
         EditMessageRequest edit_message = 10;
         
