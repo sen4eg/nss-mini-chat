@@ -94,14 +94,14 @@ message DeleteMessageResponse {
 
 
 message RequestDialog {
-    int64 last_message_id = 1;
-    int64 dialog_id = 2;
-    int32 count = 3;
-    int32 offset = 4;
+    int64 last_message_id = 1; // for unread count 
+    int64 dialog_id = 2; // id for user or group_id with negative sign
+    int32 count = 3; // amount of messages to recieve
+    int32 offset = 4; // amount of already holded messages(for scrolling into history). offset from most recent message
 }
-
+// request once on connect
 message RequestUpdate {
-    int64 last_message_id = 1;
+    int64 last_message_id = 1; // 0 for none
 }
 
 message ContactsMessage {
@@ -159,7 +159,23 @@ message UserInfo{
 message UserInfoResponse{
     repeated UserInfo users = 1;
 }
-
+/**
+ * Request workflow:
+ * 1) Token = session token
+ * 2) Content = one of the request types depending on what action we are requesting
+ *      for example:
+        {
+            "request_dialog": {
+                "count": 10,
+                "dialog_id": "8",
+                "last_message_id": "0",
+                "offset": 0
+            },
+            "token": "{{token}}"
+        }
+ * 3) When the request is finalized: requestStream.writeAsync(my_request)   
+ * 4) Response comes async from response stream (order is not guaranteed)
+ */
 message CommunicationRequest {
     string token = 7;
     oneof content {

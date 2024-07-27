@@ -1,4 +1,8 @@
-﻿namespace MiniChat
+﻿using Grpc.Net.Client;
+using MiniChat.Model;
+using MiniProtoImpl;
+
+namespace MiniChat
 {
     public partial class MainPage : ContentPage
     {
@@ -7,24 +11,62 @@
         public MainPage()
         {
             InitializeComponent();
-
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private void OnConnectClicked(object sender, EventArgs e)
         {
-            count++;
+            // init
+            try {
+                ClientState state = ClientState.GetState();
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+                state.Channel = GrpcChannel.ForAddress("http://localhost:5244"); // make sure to use right port, maybe add posibility to set it along with ip for development stage
+                state.Client = new MiniProtoImpl.Chat.ChatClient(state.Channel);
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+                // Get device information
+
+                state.UserDevice ??= new MiniProtoImpl.Device // if device is null, then:...
+                {
+                    Ip = "localhost", // TODO get device IP address
+                    Name = DeviceInfo.Name,
+                    Os = DeviceInfo.Platform.ToString()
+                };
+
+                var response = state.Client.Connect(new MiniProtoImpl.ConnectRequest
+                {
+                    Credentials = new MiniProtoImpl.Credentials
+                    {
+                        Name = "Martin",
+                        Password = "password",
+                    },
+                    Device = state.UserDevice
+                });
+                //channel.Dispose();
+
+                response_field.Text = response.ToString();
+
+                state.SessionToken = response.Token;
+                state.RefreshToken = response.RefreshToken;
+
+                state.ConnectionObject = state.Client.InitiateAsyncChannel();
+
+                //connectionObject.RequestStream
+
+                if (response.IsSucceed)
+                {
+                    LoginBtn.IsEnabled = true;
+                }
+            }catch (Exception ex) {
+                response_field.Text = ex.Message;
+                SemanticScreenReader.Announce(response_field.Text);
+            }
+            
         }
 
-        private void OnLoginClicked(object sender, EventArgs e)
+        private async void OnLoginClickedAsync(object sender, EventArgs e)
         {
-            App.Current.MainPage.Navigation.PushAsync(new LoginPage());
+            ClientState state = ClientState.GetState();
+            if (String.IsNullOrEmpty(state.SessionToken)) return;
+            await Shell.Current.GoToAsync(nameof(LoginPage));
         }
     }
 

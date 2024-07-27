@@ -51,7 +51,7 @@ namespace MiniChat.ViewModel
             }
             else
             {
-                await App.Current.MainPage.DisplayAlert("Login Failed", "Invalid Username or Password", "OK");
+                await Shell.Current.DisplayAlert("Login Failed", "Invalid Username or Password", "OK");
 
                 // Clear password field
                 Password = string.Empty;

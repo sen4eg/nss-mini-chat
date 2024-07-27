@@ -9,16 +9,15 @@
     <Grid RowDefinitions="Auto, *"
           Padding="8">
 
-        <CollectionView ItemsSource="{Binding Messages}">
+        <CollectionView ItemsSource="{Binding ConversationObject.Messages}" x:DataType="{x:Null}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <ScrollView>
-                        <Label Text="{Binding .}" />
+                        <Label Text="{Binding Contents}" />
                     </ScrollView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
         <!-- Add conversation collection view above this line -->
 
         <Entry x:Name="editor"

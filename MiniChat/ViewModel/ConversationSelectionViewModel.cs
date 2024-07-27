@@ -1,53 +1,47 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MiniChat.Model;
+using MiniProtoImpl;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace MiniChat.ViewModel
 {   
     public partial class ConversationSelectionViewModel : ObservableObject
-    {   [ObservableProperty]
-        ObservableCollection<Message> messages;
+    {   
+
+        private ClientState state;
+        
+        [ObservableProperty]
+        ObservableCollection<MiniChat.Model.Conversation> conversations = [];
 
         public ConversationSelectionViewModel()
         {
-            Messages =
-            [
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-            ];
+            state = ClientState.GetState();
+            conversations = state.Conversations;
+            RequestMessages();
         }
 
         [RelayCommand]
-        async Task TapConversation()
+        async Task TapConversation(Conversation conversation)
         {
-            await Shell.Current.GoToAsync(nameof(ConversationPage));
+            Trace.WriteLine(conversation.ToString());
+            await Shell.Current.GoToAsync(nameof(ConversationPage), new Dictionary<String, Object> { { "ConversationObject", conversation } });
         }
+
+        private void RequestMessages()
+        {
+            CommunicationRequest communicationRequest = new()
+            {
+                Token = state.SessionToken,
+                RequestUpdate = new RequestUpdate
+                {
+                    LastMessageId = 0,
+                }
+            };
+
+            state.RequestStream?.WriteAsync(communicationRequest); // TODO what to do when request stream is null
+        }
+        
     }
 }
