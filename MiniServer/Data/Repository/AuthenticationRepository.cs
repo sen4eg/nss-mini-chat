@@ -28,7 +28,8 @@ public class ValidationTokenRepository : IValidationTokenRepository {
         var validationToken = new AuthenicatedToken {
             Username = username,
             Device = device.Name,
-            ip = device.Name,
+            ip = device.Ip,
+            OS = device.Os,
             Token = token
         };
 

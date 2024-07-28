@@ -6,7 +6,7 @@ namespace MiniServer.Data.DTO;
 
 public class MessageDTO {
     public MessageDTO(AuthorizedRequest<Message> request) {
-        this.Content = request.Request.Message_;
+        this.Content = request.Request.Text;
         this.UserId = request.UserId;
         this.ReceiverId = request.Request.ReceiverId;
         this.Timestamp = DateTime.UtcNow;
@@ -34,7 +34,7 @@ public class MessageDTO {
     public Message ConvertToGrpcMessage() {
         return new Message {
             Id = MessageId,
-            Message_ = Content,
+            Text = Content,
             AuthorId = UserId,
             ReceiverId = ReceiverId,
             Timestamp = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(Timestamp)

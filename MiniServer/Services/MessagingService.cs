@@ -23,13 +23,15 @@ public class MessagingService : IMessagingService {
     
     private readonly ICommEventFactory _commEventFactory;
     private readonly IMessageRepository _messageRepository;
+    private readonly IGroupRepository _groupRepository;
 
-    public MessagingService(ICommEventFactory commEventFactory, EventDispatcher eventDispatcher, IConnectionManager connectionManager, IMessageRepository repository) {
+    public MessagingService(ICommEventFactory commEventFactory, EventDispatcher eventDispatcher, IConnectionManager connectionManager, IMessageRepository repository, IGroupRepository groupRepository) {
         _commEventFactory = commEventFactory;
         _eventDispatcher = eventDispatcher;
         _connectionManager = connectionManager;
         _lastUsedMessageId = repository.GetLastMessageId().GetAwaiter().GetResult();// TODO check if this is correct
         _messageRepository = repository;
+        _groupRepository = groupRepository;
     }
 
 
@@ -115,7 +117,20 @@ public class MessagingService : IMessagingService {
         }
     }
 
-    private void HandleGroupMessage(AuthorizedRequest<Message> message) {
-        throw new NotImplementedException();
+    private async Task HandleGroupMessage(AuthorizedRequest<Message> message) {
+        var group = await _groupRepository.GetGroup(message.Request.ReceiverId);
+        if (group == null) {
+            return;
+        }
+        var msg = new MessageDTO(message);
+        msg.MessageId = GetNextMessageId();
+        var messageEvent = _commEventFactory.Create<MessagePersistanceEvent, MessageDTO>(msg, () => { });
+        var members = group.GroupRoles.Select(g => g.UserId).ToList();
+        members.Add(group.CreatorUserId);
+        foreach (var groupUser in members) {
+            var cons = _connectionManager.GetOpenedConnection(groupUser);
+            FireMessage(cons, msg);
+        }
+        
     }
 }

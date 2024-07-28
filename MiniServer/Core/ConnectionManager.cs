@@ -229,31 +229,87 @@ namespace MiniServer.Core {
                 {
                     var evnt = _commEventFactory.Create<CreateGroupEvent, AuthorizedRequest<CreateGroupRequest>>(
                         new AuthorizedRequest<CreateGroupRequest>(Convert.ToInt64(userId), msg.CreateGroup, user),
-                        () => _logger.LogInformation($"Group created by {userId}"));    
+                        () => _logger.LogInformation($"Group created by {userId}"));
+                    var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<CreateGroupRequest>>();
+                    _eventDispatcher.EnqueueEvent(async () =>
+                    {
+                        await evnt.Execute(taskCompletionSource);
+                    });
+
                     break;
                     
                 }
-                case CommunicationRequest.ContentOneofCase.DeleteGroup: {
+                case CommunicationRequest.ContentOneofCase.DeleteGroup: 
+                {
                     var evnt = _commEventFactory.Create<DeleteGroupEvent, AuthorizedRequest<DeleteGroupRequest>>(
                         new AuthorizedRequest<DeleteGroupRequest>(Convert.ToInt64(userId), msg.DeleteGroup, user),
                         () => _logger.LogInformation($"Group deleted by {userId}"));
+                    
+                    var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<DeleteGroupRequest>>();
+                    _eventDispatcher.EnqueueEvent(async () =>
+                    {
+                        await evnt.Execute(taskCompletionSource);
+                    });
+                    
+                    
                     break;
                 }
                 case CommunicationRequest.ContentOneofCase.AddMember: {
                     var evnt = _commEventFactory.Create<AddMemberEvent, AuthorizedRequest<AddMemberRequest>>(
                         new AuthorizedRequest<AddMemberRequest>(Convert.ToInt64(userId), msg.AddMember, user),
                         () => _logger.LogInformation($"Member added by {userId}"));
+                    
+                    var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<AddMemberRequest>>();
+                    _eventDispatcher.EnqueueEvent(async () =>
+                    {
+                        await evnt.Execute(taskCompletionSource);
+                    });
+                    
                     break;
                 }
                 case CommunicationRequest.ContentOneofCase.RemoveMember: {
                     var evnt = _commEventFactory.Create<RemoveMemberEvent, AuthorizedRequest<RemoveMemberRequest>>(
                         new AuthorizedRequest<RemoveMemberRequest>(Convert.ToInt64(userId), msg.RemoveMember, user),
                         () => _logger.LogInformation($"Member removed by {userId}"));
+                    
+                    var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<RemoveMemberRequest>>();
+                    _eventDispatcher.EnqueueEvent(async () =>
+                    {
+                        await evnt.Execute(taskCompletionSource);
+                    });
+                    
                     break;
                 }
                 case CommunicationRequest.ContentOneofCase.EditMessage:
                     // Handle EditMessage case if needed
                     break;
+                case CommunicationRequest.ContentOneofCase.Search: {
+
+
+                    var evnt = _commEventFactory.Create<SearchEvent, AuthorizedRequest<SearchRequest>>(
+                        new AuthorizedRequest<SearchRequest>(Convert.ToInt64(userId), msg.Search, user),
+                        () => _logger.LogInformation($"Search by {userId}"));
+
+                    var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<SearchRequest>>();
+                    _eventDispatcher.EnqueueEvent(async () => { await evnt.Execute(taskCompletionSource); });
+
+                    break;
+                }
+
+                case CommunicationRequest.ContentOneofCase.FetchUsers: {
+                    var evnt = _commEventFactory.Create<FetchUsersEvent, AuthorizedRequest<FetchUserInfoRequest>>(
+                        new AuthorizedRequest<FetchUserInfoRequest>(Convert.ToInt64(userId), msg.FetchUsers, user),
+                        () => _logger.LogInformation($"Fetch users by {userId}"));
+                    
+                    var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<FetchUserInfoRequest>>();
+                    
+                    _eventDispatcher.EnqueueEvent(async () =>
+                    {
+                        await evnt.Execute(taskCompletionSource);
+                    });
+                    
+                    break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }

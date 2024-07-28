@@ -66,7 +66,7 @@ message Message {
     int64 author_id = 6; // server-side
     int64 receiver_id = 2; // serves to distinguish between group and user messages
     int64 responses_to = 4; // id of the message this message is a response to (if any)
-    string message = 3; // message content
+    string text = 3; // message content
     repeated Attachment attachment = 5;
     google.protobuf.Timestamp timestamp = 7; // timestamp is server-side
 }
@@ -85,25 +85,35 @@ message GeneralEvent{
     string content = 2;
 }
 
-message Dialog {
-    int64 contact_id = 1;
-    Message last_message = 2;
-    int64 unread_count = 3;
+
+// request
+message RequestDialog {
+    int64 last_message_id = 1; // for unread count 
+    int64 dialog_id = 2; // id for user or group_id with negative sign
+    int32 count = 3; // amount of messages to recieve
+    int32 offset = 4; // amount of already holded messages(for scrolling into history). offset from most recent message
+}
+// response
+message DialogBody { // Batch of messages
+    int64 contact_id = 1; // 
+    repeated Message messages = 2;
+    int64 last_message_id = 3;
+}
+
+// request once on connect
+message RequestUpdate {
+    int64 last_message_id = 1; // 0 for none
 }
 
 message ContactsMessage {
     repeated Dialog dialogs = 1;
 }
 
-message RequestDialog {
-    int64 last_message_id = 1;
-    int64 dialog_id = 2;
-    int32 count = 3;
-    int32 offset = 4;
-}
-
-message RequestUpdate {
-    int64 last_message_id = 1;
+message Dialog {// username
+    int64 contact_id = 1;
+    Message last_message = 2;
+    int64 unread_count = 3;
+    string contact_name = 4; // TODO: username or group name 
 }
 
 message EditMessageRequest { // Also updates a timestamp 
@@ -112,12 +122,59 @@ message EditMessageRequest { // Also updates a timestamp
     repeated Attachment attachment = 3;
 }
 
-message DialogBody { // Batch of messages
-    int64 contact_id = 1;
-    repeated Message messages = 2;
-    int64 last_message_id = 3;
+
+
+// Search for
+// 1 username
+// 2 email
+// 3 message
+message SearchRequest {
+    string query = 1;
 }
 
+message Contact{
+    string username = 1;
+    int64 uid = 2;
+    string status = 3; // Stranger, Contact, BlockedBy, BlockedHim
+}
+
+message SearchResponse{
+    repeated Contact contacts = 1;
+}
+
+
+message FetchUserInfoRequest{
+    repeated int64 uids = 1;
+}
+
+message UserInfo{
+    string username = 1;
+    string email = 2;
+    string status = 3; // Stranger, Contact, BlockedBy, BlockedHim
+}
+
+message UserInfoResponse{
+    repeated UserInfo users = 1;
+}
+
+
+/**
+ * Request workflow:
+ * 1) Token = session token
+ * 2) Content = one of the request types depending on what action we are requesting
+ *      for example:
+        {
+            "request_dialog": {
+                "count": 10,
+                "dialog_id": "8",
+                "last_message_id": "0",
+                "offset": 0
+            },
+            "token": "{{token}}"
+        }
+ * 3) When the request is finalized: requestStream.writeAsync(my_request)   
+ * 4) Response comes async from response stream (order is not guaranteed)
+ */
 message CommunicationRequest {
     string token = 7;
     oneof content {
@@ -130,9 +187,8 @@ message CommunicationRequest {
         RequestUpdate request_update = 8; // requested once on connection
         RequestDialog request_dialog = 9;
         EditMessageRequest edit_message = 10;
-       
-        // Search?
-        // Settings?
+        SearchRequest search = 11;
+        FetchUserInfoRequest fetch_users = 12;
     }
 }
 message CommunicationResponse {
@@ -146,6 +202,8 @@ message CommunicationResponse {
         ContactsMessage contacts_message = 7;
         DialogBody dialog_update = 8;
         string error_msg = 9;
+        SearchResponse search_response = 10;
+        UserInfoResponse user_info = 11;
     }
 }
 

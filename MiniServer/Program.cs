@@ -33,6 +33,8 @@ namespace MiniServer
             builder.Services.AddSingleton<ICommEventFactory, CommEventFactory>();
             builder.Services.AddSingleton<IConnectionManager, ConnectionManager>();
             builder.Services.AddTransient<IPersistenceService, PersistenceService>();
+            builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
+            builder.Services.AddSingleton<ISearchService, SearchService>();
             
             var app = builder.Build();
 

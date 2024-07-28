@@ -210,7 +210,40 @@ public class GroupCreatedEvent : EventBase<Group> {
         _connectionManager = connectionManager;
     }
     protected override async Task<Group> ExecuteAsync() {
-        _connectionManager.HandleGroupCreated(_group);
+        await _connectionManager.HandleGroupCreated(_group);
         return _group;
+    }
+}
+// SearchEvent
+public class SearchEvent : EventBase<AuthorizedRequest<SearchRequest>> {
+    
+    private readonly AuthorizedRequest<SearchRequest> _searchRequest;
+    private readonly ISearchService _service;
+
+    public SearchEvent(AuthorizedRequest<SearchRequest> searchRequest, ISearchService service, Action sideEffect) :
+        base(sideEffect) {
+        _searchRequest = searchRequest;
+        _service = service;
+    }
+    
+
+    protected override async Task<AuthorizedRequest<SearchRequest>> ExecuteAsync() {
+        await _service.Search(_searchRequest);
+        return _searchRequest;
+    }    
+}
+
+public class FetchUsersEvent : EventBase<AuthorizedRequest<FetchUserInfoRequest>> {
+    private readonly AuthorizedRequest<FetchUserInfoRequest> _authorizedRequest;
+    private readonly ISearchService _userService;
+
+    public FetchUsersEvent(AuthorizedRequest<FetchUserInfoRequest> authorizedRequest, ISearchService searchService, Action sideEffect) : base(sideEffect) {
+        _authorizedRequest = authorizedRequest;
+        _userService = searchService;
+    }
+
+    protected override async Task<AuthorizedRequest<FetchUserInfoRequest>> ExecuteAsync() {
+        await _userService.FetchUsers(_authorizedRequest);
+        return _authorizedRequest;
     }
 }
