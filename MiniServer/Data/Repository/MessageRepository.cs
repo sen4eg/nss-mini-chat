@@ -50,11 +50,15 @@ public class MessageRepository : IMessageRepository{
     }
 
     public Task DeleteMessageAsync(long messageId) {
-        throw new NotImplementedException();
+        var message = _context.Messages.First(m => m.MessageId == messageId);
+        message.isDeleted = true;
+        return _context.SaveChangesAsync();
     }
 
     public Task UpdateMessageAsync(MessageDTO message) {
-        throw new NotImplementedException();
+        var messageToUpdate = _context.Messages.First(m => m.MessageId == message.MessageId);
+        messageToUpdate.EditFromDTO(message);
+        return _context.SaveChangesAsync();
     }
 
     public async Task<long> GetLastMessageId()
@@ -85,7 +89,8 @@ public class MessageRepository : IMessageRepository{
     public DialogBodyStruct GetMessagesForUser(long authorizedRequestUserId, RequestDialog authorizedRequestRequest)
     {
         var list = _context.Messages
-            .Where(m => m.ReceiverId == authorizedRequestUserId && m.UserId == authorizedRequestRequest.DialogId)
+            .Where(m => m.UserId == authorizedRequestUserId || m.UserId == authorizedRequestRequest.DialogId)
+            .Where(m => m.ReceiverId == authorizedRequestUserId || m.ReceiverId == authorizedRequestRequest.DialogId)
             .Where(m => m.MessageId >= authorizedRequestRequest.LastMessageId)
             .OrderByDescending(m => m.MessageId)
             .Skip(authorizedRequestRequest.Offset)

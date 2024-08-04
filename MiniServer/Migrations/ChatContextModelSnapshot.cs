@@ -74,11 +74,14 @@ namespace MiniServer.Migrations
 
             modelBuilder.Entity("MiniServer.Data.Model.Contact", b =>
                 {
-                    b.Property<long>("ContactId")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ContactId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ContactId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("ContactTypeId")
                         .HasColumnType("integer");
@@ -86,7 +89,7 @@ namespace MiniServer.Migrations
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("ContactId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ContactTypeId");
 
@@ -197,7 +200,16 @@ namespace MiniServer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("MessageType")
+                        .HasColumnType("integer");
+
                     b.Property<long>("ReceiverId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ResponseToId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TargetId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("Timestamp")
@@ -207,6 +219,9 @@ namespace MiniServer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("isEdited")
                         .HasColumnType("boolean");
 
                     b.HasKey("MessageId");

@@ -12,6 +12,8 @@ service Chat {
     rpc InitiateAsyncChannel(stream CommunicationRequest) returns (stream CommunicationResponse) {} // Pipe for messages
 }
 
+// TODO: At this very stage protos
+
 message Device {
     string name = 1; // device name
     string os = 2; // device os
@@ -61,14 +63,24 @@ message Attachment {
     bytes data = 3;
 }
 
+//        msg_type = Technical message type
+//        int8 msg_type
+//        0 - default - target id stands for client-side message identifier
+//        1 - edit  - target id stands for message target
+//        2 - deletion - target id stands for message target
+//        [4 - later can be extended to seen] 
+
 message Message {
     int64 id = 1; // server-side
+    int64 target_id = 8; // client-side
     int64 author_id = 6; // server-side
     int64 receiver_id = 2; // serves to distinguish between group and user messages
     int64 responses_to = 4; // id of the message this message is a response to (if any)
-    string text = 3; // message content
+    string content = 3; 
     repeated Attachment attachment = 5;
     google.protobuf.Timestamp timestamp = 7; // timestamp is server-side
+    int32 msg_type = 9; // could be byte, proto3 does not support byte except for array of {bytes}
+    bool is_edited = 10; // server-side
 }
 
 message DeleteMessageRequest {
@@ -80,36 +92,23 @@ message DeleteMessageResponse {
     bool is_succeed = 2;
 }
 
-message GeneralEvent{
-    string name = 1;
-    string content = 2;
-}
 
-
-// request
 message RequestDialog {
-    int64 last_message_id = 1; // for unread count 
-    int64 dialog_id = 2; // id for user or group_id with negative sign
-    int32 count = 3; // amount of messages to recieve
-    int32 offset = 4; // amount of already holded messages(for scrolling into history). offset from most recent message
-}
-// response
-message DialogBody { // Batch of messages
-    int64 contact_id = 1; // 
-    repeated Message messages = 2;
-    int64 last_message_id = 3;
+    int64 last_message_id = 1;
+    int64 dialog_id = 2;
+    int32 count = 3;
+    int32 offset = 4;
 }
 
-// request once on connect
 message RequestUpdate {
-    int64 last_message_id = 1; // 0 for none
+    int64 last_message_id = 1;
 }
 
 message ContactsMessage {
     repeated Dialog dialogs = 1;
 }
 
-message Dialog {// username
+message Dialog {
     int64 contact_id = 1;
     Message last_message = 2;
     int64 unread_count = 3;
@@ -122,6 +121,11 @@ message EditMessageRequest { // Also updates a timestamp
     repeated Attachment attachment = 3;
 }
 
+message DialogBody { // Batch of messages
+    int64 contact_id = 1;
+    repeated Message messages = 2;
+    int64 last_message_id = 3;
+}
 
 
 // Search for
@@ -132,16 +136,15 @@ message SearchRequest {
     string query = 1;
 }
 
-message Contact{
+message ContactMsg{
     string username = 1;
     int64 uid = 2;
     string status = 3; // Stranger, Contact, BlockedBy, BlockedHim
 }
 
 message SearchResponse{
-    repeated Contact contacts = 1;
+    repeated ContactMsg contacts = 1;
 }
-
 
 message FetchUserInfoRequest{
     repeated int64 uids = 1;
@@ -157,38 +160,25 @@ message UserInfoResponse{
     repeated UserInfo users = 1;
 }
 
-
-/**
- * Request workflow:
- * 1) Token = session token
- * 2) Content = one of the request types depending on what action we are requesting
- *      for example:
-        {
-            "request_dialog": {
-                "count": 10,
-                "dialog_id": "8",
-                "last_message_id": "0",
-                "offset": 0
-            },
-            "token": "{{token}}"
-        }
- * 3) When the request is finalized: requestStream.writeAsync(my_request)   
- * 4) Response comes async from response stream (order is not guaranteed)
- */
 message CommunicationRequest {
     string token = 7;
     oneof content {
         Message message = 1;
         DeleteMessageRequest delete_message = 2;
+        EditMessageRequest edit_message = 10;
+        
         CreateGroupRequest create_group = 3;
         DeleteGroupRequest delete_group = 4;
         AddMemberRequest add_member = 5;
         RemoveMemberRequest remove_member = 6;
+        
         RequestUpdate request_update = 8; // requested once on connection
         RequestDialog request_dialog = 9;
-        EditMessageRequest edit_message = 10;
+        
         SearchRequest search = 11;
         FetchUserInfoRequest fetch_users = 12;
+        // Search?
+        // Settings?
     }
 }
 message CommunicationResponse {
@@ -199,9 +189,12 @@ message CommunicationResponse {
         DeleteGroupResponse delete_group = 4;
         AddMemberResponse add_member = 5;
         RemoveMemberResponse remove_member = 6;
+        
         ContactsMessage contacts_message = 7;
         DialogBody dialog_update = 8;
+        
         string error_msg = 9;
+        
         SearchResponse search_response = 10;
         UserInfoResponse user_info = 11;
     }

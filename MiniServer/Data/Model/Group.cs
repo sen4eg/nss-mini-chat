@@ -25,6 +25,9 @@ public class Group
     // Navigation property for group roles
     public ICollection<GroupRole> GroupRoles { get; set; } = new List<GroupRole>();
 
+    [NotMapped]
+    public Message? LastMessage { get; set; }
+
     public Group(String name, String description, long creatorUserId) {
         Name = name;
         Description = description;

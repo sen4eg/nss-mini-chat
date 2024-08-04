@@ -21,21 +21,24 @@ namespace MiniServer
                 options.UseNpgsql(builder.Configuration.GetConnectionString("ChatContext"));
             }, ServiceLifetime.Singleton);
             
+            builder.Services.AddSingleton<ICommEventFactory, CommEventFactory>();
             builder.Services.AddSingleton<EventDispatcher>();
             builder.Services.AddTransient<IConnectionLogicService, ConnectionLogicService>(); // Register the business logic service
             builder.Services.AddTransient<IAuthenticationService, AuthenticationService>(); // Register the business logic service
             builder.Services.AddTransient<ChatService>(); // Register the gRPC service
+            builder.Services.AddSingleton<IGroupService, GroupService>();
             
             builder.Services.AddSingleton<IUserRepository, UserRepository>();
             builder.Services.AddSingleton<IMessageRepository, MessageRepository>();
+            builder.Services.AddSingleton<IContactRepository, ContactRepository>();
+            builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
             builder.Services.AddSingleton<IValidationTokenRepository, ValidationTokenRepository>();
+            
             builder.Services.AddSingleton<IMessagingService, MessagingService>();
-            builder.Services.AddSingleton<ICommEventFactory, CommEventFactory>();
             builder.Services.AddSingleton<IConnectionManager, ConnectionManager>();
             builder.Services.AddTransient<IPersistenceService, PersistenceService>();
-            builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
-            builder.Services.AddSingleton<ISearchService, SearchService>();
-            
+            builder.Services.AddTransient<IContactService, ContactService>();
+
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())

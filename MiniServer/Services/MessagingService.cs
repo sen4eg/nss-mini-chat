@@ -23,14 +23,20 @@ public class MessagingService : IMessagingService {
     
     private readonly ICommEventFactory _commEventFactory;
     private readonly IMessageRepository _messageRepository;
+    private readonly IContactService _contactService;
+    private readonly IGroupService _groupService;
     private readonly IGroupRepository _groupRepository;
 
-    public MessagingService(ICommEventFactory commEventFactory, EventDispatcher eventDispatcher, IConnectionManager connectionManager, IMessageRepository repository, IGroupRepository groupRepository) {
+    public MessagingService(ICommEventFactory commEventFactory, EventDispatcher eventDispatcher, 
+            IConnectionManager connectionManager, IMessageRepository repository, IContactService contactService,
+            IGroupService groupService, IGroupRepository groupRepository) {
         _commEventFactory = commEventFactory;
         _eventDispatcher = eventDispatcher;
         _connectionManager = connectionManager;
         _lastUsedMessageId = repository.GetLastMessageId().GetAwaiter().GetResult();// TODO check if this is correct
         _messageRepository = repository;
+        _contactService = contactService;
+        _groupService = groupService;
         _groupRepository = groupRepository;
     }
 
@@ -48,15 +54,7 @@ public class MessagingService : IMessagingService {
         if (cons == null) {
             return Task.CompletedTask;
         }
-        List<Dialog> dialogs = new List<Dialog>();
-        foreach (var dialogStruct in messages) {
-            Dialog dialog = new Dialog {
-                ContactId = dialogStruct.DialogId,
-                LastMessage = dialogStruct.LastMessage.ConvertToGrpcMessage(),
-                UnreadCount = dialogStruct.unreadCount
-            };
-            dialogs.Add(dialog);
-        }
+        List<Dialog> dialogs = _contactService.GetDialogsForUser(authorizedRequest.UserId);
         ContactsMessage contactsMessage = new ContactsMessage {
             Dialogs = { dialogs }
         };
@@ -94,11 +92,15 @@ public class MessagingService : IMessagingService {
         var msg = new MessageDTO(request);
         msg.MessageId = GetNextMessageId();
         
+        
         var messageEvent = _commEventFactory.Create<MessagePersistanceEvent, MessageDTO>(msg, () => { });
         var cons = _connectionManager.GetOpenedConnection(msg.ReceiverId);
+        var senderCons = _connectionManager.GetOpenedConnection(request.UserId);
+        FireMessage(senderCons, msg); // tell the sender the message was sent
         FireMessage(cons, msg); // fire right away persist slowly
         // TODO Consider caching here
         _eventDispatcher.EnqueueEvent(() => messageEvent.Execute(new TaskCompletionSource<MessageDTO>()));
+        _contactService.UpdateDialog(msg.UserId, msg.ReceiverId);
     }
 
     private static void FireMessage(IEnumerable<UserConnection>? userConnections, MessageDTO msg) {

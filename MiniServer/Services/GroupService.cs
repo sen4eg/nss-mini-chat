@@ -12,11 +12,11 @@ public interface IGroupService
     Task DeleteGroup(AuthorizedRequest<DeleteGroupRequest> authorizedRequest);
     Task AddMember(AuthorizedRequest<AddMemberRequest> authorizedRequest);
     Task RemoveMember(AuthorizedRequest<RemoveMemberRequest> authorizedRequest);
+    IEnumerable<long> GetGroupMembers(long requestReceiverId);
 }
 
 public class GroupService: IGroupService{
-    
-    IPersistenceService _persistenceService;
+    readonly IPersistenceService _persistenceService;
     private readonly EventDispatcher _eventDispatcher;
     private readonly ICommEventFactory _commEventFactory;
 
@@ -128,5 +128,10 @@ public class GroupService: IGroupService{
             });
         }
         return Task.CompletedTask;
+    }
+
+    public IEnumerable<long> GetGroupMembers(long requestReceiverId) {
+        var grp = _persistenceService.GetByIdAsync<Group>(Int64.Abs(requestReceiverId)).GetAwaiter().GetResult();
+        return grp.GroupRoles.Select(gr => gr.UserId);
     }
 }
