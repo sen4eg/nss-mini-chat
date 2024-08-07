@@ -97,7 +97,7 @@ namespace MiniChat.Model
                                 Conversations.Add(new Conversation(dialog));
                             }
                         break;
-                        // response to receiving??? a message
+                        // response to receiving a message
                         case CommunicationResponse.ContentOneofCase.Message:
                             var message = response.Message;
                             foreach(Conversation conversation in Conversations)
@@ -127,10 +127,8 @@ namespace MiniChat.Model
                         default:
                             Trace.WriteLine(String.Format("Received unimplemented response of type \"%s\"", response.ContentCase.ToString()));
                             break;
-
                     }
                     Trace.WriteLine(response.ToString());
-
                 }
             }
         }
