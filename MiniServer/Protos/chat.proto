@@ -94,25 +94,14 @@ message DeleteMessageResponse {
 
 
 message RequestDialog {
-    int64 last_message_id = 1; // for unread count 
-    int64 dialog_id = 2; // id for user or group_id with negative sign
-    int32 count = 3; // amount of messages to recieve
-    int32 offset = 4; // amount of already holded messages(for scrolling into history). offset from most recent message
-}
-// request once on connect
-message RequestUpdate {
-    int64 last_message_id = 1; // 0 for none
-}
-// response
-message DialogBody { // Batch of messages
-    int64 contact_id = 1; // 
-    repeated Message messages = 2;
-    int64 last_message_id = 3;
+    int64 last_message_id = 1;
+    int64 dialog_id = 2;
+    int32 count = 3;
+    int32 offset = 4;
 }
 
-// request once on connect
 message RequestUpdate {
-    int64 last_message_id = 1; // 0 for none
+    int64 last_message_id = 1;
 }
 
 message ContactsMessage {
@@ -132,20 +121,10 @@ message EditMessageRequest { // Also updates a timestamp
     repeated Attachment attachment = 3;
 }
 
-
-
-// Search for
-// 1 username
-// 2 email
-// 3 message
-message SearchRequest { 
-    string query = 1; 
-}
-
-message Contact{
-    string username = 1;
-    int64 uid = 2;
-    string status = 3; // Stranger, Contact, BlockedBy, BlockedHim
+message DialogBody { // Batch of messages
+    int64 contact_id = 1;
+    repeated Message messages = 2;
+    int64 last_message_id = 3;
 }
 
 
@@ -180,27 +159,11 @@ message UserInfo{
 message UserInfoResponse{
     repeated UserInfo users = 1;
 }
-/**
- * Request workflow:
- * 1) Token = session token
- * 2) Content = one of the request types depending on what action we are requesting
- *      for example:
-        {
-            "request_dialog": {
-                "count": 10,
-                "dialog_id": "8",
-                "last_message_id": "0",
-                "offset": 0
-            },
-            "token": "{{token}}"
-        }
- * 3) When the request is finalized: requestStream.writeAsync(my_request)   
- * 4) Response comes async from response stream (order is not guaranteed)
- */
+
 message CommunicationRequest {
     string token = 7;
     oneof content {
-        Message message = 1; // sending a message
+        Message message = 1;
         DeleteMessageRequest delete_message = 2;
         EditMessageRequest edit_message = 10;
         
