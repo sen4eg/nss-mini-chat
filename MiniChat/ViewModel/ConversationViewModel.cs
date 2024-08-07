@@ -26,7 +26,7 @@ namespace MiniChat.ViewModel
         String messageText = string.Empty;
         public ConversationViewModel()
         {
-            
+
         }
 
         /// <summary>

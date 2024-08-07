@@ -127,10 +127,8 @@ namespace MiniChat.Model
                         default:
                             Trace.WriteLine(String.Format("Received unimplemented response of type \"%s\"", response.ContentCase.ToString()));
                             break;
-
                     }
                     Trace.WriteLine(response.ToString());
-
                 }
             }
         }
