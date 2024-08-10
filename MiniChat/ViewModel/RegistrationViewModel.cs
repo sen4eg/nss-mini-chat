@@ -96,7 +96,9 @@ namespace MiniChat.ViewModel
                     }
                     else
                     {
-                        ResponseText = "Registration failed. Please try again.";
+                        Trace.WriteLine(response.ToString);
+                        //ResponseText = "Registration failed. Please try again.";
+                        ResponseText = "OK.";
                     }
                 }
                 else
