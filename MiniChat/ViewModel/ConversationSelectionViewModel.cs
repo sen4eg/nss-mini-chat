@@ -11,37 +11,37 @@ namespace MiniChat.ViewModel
 
         public ConversationSelectionViewModel()
         {
-            Messages =
-            [
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-                new Message("Zdeněk", "V kolik zítra na pivo?"),
-                new Message("Babička", "Nezapomeň koupit salám"),
-                new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
-                new Message("Stanislav z účetního", "1 000 000"),
-            ];
+            //Messages =
+            //[
+            //    new Message("Zdeněk", "V kolik zítra na pivo?"),
+            //    new Message("Babička", "Nezapomeň koupit salám"),
+            //    new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
+            //    new Message("Stanislav z účetního", "1 000 000"),
+            //    new Message("Zdeněk", "V kolik zítra na pivo?"),
+            //    new Message("Babička", "Nezapomeň koupit salám"),
+            //    new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
+            //    new Message("Stanislav z účetního", "1 000 000"),
+            //    new Message("Zdeněk", "V kolik zítra na pivo?"),
+            //    new Message("Babička", "Nezapomeň koupit salám"),
+            //    new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
+            //    new Message("Stanislav z účetního", "1 000 000"),
+            //    new Message("Zdeněk", "V kolik zítra na pivo?"),
+            //    new Message("Babička", "Nezapomeň koupit salám"),
+            //    new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
+            //    new Message("Stanislav z účetního", "1 000 000"),
+            //    new Message("Zdeněk", "V kolik zítra na pivo?"),
+            //    new Message("Babička", "Nezapomeň koupit salám"),
+            //    new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
+            //    new Message("Stanislav z účetního", "1 000 000"),
+            //    new Message("Zdeněk", "V kolik zítra na pivo?"),
+            //    new Message("Babička", "Nezapomeň koupit salám"),
+            //    new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
+            //    new Message("Stanislav z účetního", "1 000 000"),
+            //    new Message("Zdeněk", "V kolik zítra na pivo?"),
+            //    new Message("Babička", "Nezapomeň koupit salám"),
+            //    new Message("Bůh", "Hle, dal jsem vám všechny byliny vydávající semeno na celém povrchu země i každý strom, na němž je ovoce vydávající semeno. To vám bude za pokrm."),
+            //    new Message("Stanislav z účetního", "1 000 000"),
+            //];
         }
 
         [RelayCommand]

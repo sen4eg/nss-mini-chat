@@ -12,7 +12,7 @@ namespace MiniChat.ViewModel
     public partial class ConversationViewModel : ObservableObject
     {
         [ObservableProperty]
-        ObservableCollection<String> messages = [];
+        ObservableCollection<String> messages;
 
         [ObservableProperty]
         String messageText = string.Empty;

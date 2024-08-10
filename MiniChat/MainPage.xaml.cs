@@ -1,4 +1,8 @@
-﻿namespace MiniChat
+﻿﻿using Grpc.Net.Client;
+using MiniChat.Model;
+using MiniProtoImpl;
+
+namespace MiniChat
 {
     public partial class MainPage : ContentPage
     {
@@ -7,25 +11,18 @@
         public MainPage()
         {
             InitializeComponent();
-
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private void OnConnectClicked(object sender, EventArgs e)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            LoginBtn.IsEnabled = true;
         }
 
-        private void OnLoginClicked(object sender, EventArgs e)
+        private async void OnLoginClickedAsync(object sender, EventArgs e)
         {
-            App.Current.MainPage.Navigation.PushAsync(new LoginPage());
+            await Shell.Current.GoToAsync(nameof(LoginPage));
         }
     }
 
 }
+

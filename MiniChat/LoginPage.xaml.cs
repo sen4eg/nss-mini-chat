@@ -3,13 +3,15 @@ using CommunityToolkit.Mvvm.Input;
 using MiniChat.ViewModel;
 using System.Windows.Input;
 
-namespace MiniChat;
-
-public partial class LoginPage : ContentPage
+namespace MiniChat
 {
-    public LoginPage()
+
+    public partial class LoginPage : ContentPage
     {
-        InitializeComponent();
-        BindingContext = new LoginViewModel();
+        public LoginPage()
+        {
+            InitializeComponent();
+            BindingContext = new LoginViewModel();
+        }
     }
 }

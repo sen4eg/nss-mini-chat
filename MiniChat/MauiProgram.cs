@@ -20,6 +20,8 @@ namespace MiniChat
 
 
             // --------- ADD PAGES -----------
+            builder.Services.AddSingleton<LoginPage>();
+            builder.Services.AddSingleton<LoginViewModel>();
             builder.Services.AddSingleton<ConversationSelectionPage>();
             builder.Services.AddSingleton<ConversationSelectionViewModel>();
 
@@ -27,7 +29,7 @@ namespace MiniChat
             builder.Services.AddTransient<ConversationViewModel>();
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
@@ -76,7 +78,7 @@ namespace MiniChat
 
             // Opens our lovely lightspeed two way communication channel
             var comchannel = client.InitiateAsyncChannel();
-            
+
             var reqstream = comchannel.RequestStream; // Throw you input here
             var respstream = comchannel.ResponseStream; // Server data will pop out of here
             // Note that it's pretty asynchronous process so if you ordered lets say multiple packs of messages in some order they would arive in whichever order server processes them
@@ -92,7 +94,7 @@ namespace MiniChat
             };
 
 
-            var newmsg = new MiniProtoImpl.Message 
+            var newmsg = new MiniProtoImpl.Message
             {
                 Timestamp = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.UtcNow)
             };
@@ -124,3 +126,4 @@ namespace MiniChat
         }
     }
 }
+

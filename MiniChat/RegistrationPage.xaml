@@ -1,81 +1,78 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MiniChat.ViewModel"
              x:Class="MiniChat.RegistrationPage"
              Title="RegistrationPage"
              BackgroundColor="#f2f5f5">
 
-    <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
+	<ContentPage.BindingContext>
+		<vm:RegistrationViewModel />
+	</ContentPage.BindingContext>
 
-            <!-- Left side -->
-            <StackLayout Grid.Row="0" Grid.Column="0" Padding="20" VerticalOptions="Center">
-                <Image Source="dotnet_bot.png" HeightRequest="100" Aspect="AspectFit" HorizontalOptions="Start" />
-                <Label Text="MiniChat" FontSize="48" FontAttributes="Bold" TextColor="#1877f2" HorizontalOptions="Start" />
-                <Label Text="Connect with friends and the world around you on MiniChat." FontSize="24" TextColor="Black" HorizontalOptions="Start" Margin="0,20,0,0" />
-            </StackLayout>
+	<ContentPage.Content>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
 
-            <!-- Right side -->
-            <Frame Grid.Row="0" Grid.Column="1" Padding="50" Margin="30" CornerRadius="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Start" HasShadow="True" WidthRequest="600">
-                <Grid RowSpacing="20" ColumnSpacing="20">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+			<!-- Levá strana -->
+			<StackLayout Grid.Row="0" Grid.Column="0" Margin="60,0,0,100" VerticalOptions="Center">
+				<Image Source="dotnet_bot.png" HeightRequest="100" Aspect="AspectFit" HorizontalOptions="Center" />
+				<Label Text="MiniChat" FontSize="48" FontAttributes="Bold" TextColor="#1877f2" HorizontalOptions="Center" />
+				<Label Text="Spojte se s přáteli a světem kolem vás na MiniChat." FontSize="24" TextColor="Black" HorizontalOptions="Center" Margin="0,20,0,0" />
+			</StackLayout>
 
-                    <!-- Title -->
-                    <Label Grid.Row="0" Grid.ColumnSpan="2" Text="Sign up" FontSize="28" HorizontalOptions="Center" />
+			<!-- Pravá strana -->
+			<Frame Grid.Row="0" Grid.Column="1" Padding="50" Margin="30" CornerRadius="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" HasShadow="True" WidthRequest="425">
+				<ScrollView>
+					<StackLayout Spacing="20">
+						<!-- Nadpis -->
+						<Label Text="Registration" FontSize="28" HorizontalOptions="Center" />
 
-                    <!-- Username Entry -->
-                    <Entry Grid.Row="1" Grid.Column="0" Placeholder="Username" Text="{Binding Username}" Keyboard="Default" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" />
+						<!-- Vstup pro uživatelské jméno -->
+						<Entry Placeholder="Username" Text="{Binding Username}" Keyboard="Default" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" />
 
-                    <!-- Email Entry -->
-                    <Entry Grid.Row="1" Grid.Column="1" Placeholder="Email" Text="{Binding Email}" Keyboard="Email" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" />
+						<!-- Vstup pro e-mail -->
+						<Entry Placeholder="Email" Text="{Binding Email}" Keyboard="Email" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" />
 
-                    <!-- Password Entry -->
-                    <Entry Grid.Row="2" Grid.Column="0" Placeholder="Password" IsPassword="True" Text="{Binding Password}" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" />
+						<!-- Vstup pro heslo -->
+						<Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" />
 
-                    <!-- Confirm Password Entry -->
-                    <Entry Grid.Row="2" Grid.Column="1" Placeholder="Confirm Password" IsPassword="True" Text="{Binding ConfirmPassword}" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" />
+						<!-- Potvrzení hesla -->
+						<Entry Placeholder="Confirm password" IsPassword="True" Text="{Binding ConfirmPassword}" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" />
 
-                    <!-- Register Button -->
-                    <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Text="Create account"
-                            Command="{Binding RegisterCommand}"
-                            FontSize="18"
-                            BackgroundColor="#4CAF50"
-                            TextColor="White"
-                            CornerRadius="10"
-                            Padding="10"
-                            HorizontalOptions="FillAndExpand" />
+                        <!-- Tlačítko pro registraci -->
+                        <Button Text="Sign up"
+                                Command="{Binding RegistrationCommand}"
+                                IsEnabled="{Binding IsRegistrationButtonEnabled}"
+                                FontSize="18"
+                                BackgroundColor="#4CAF50"
+                                TextColor="White"
+                                CornerRadius="10"
+                                Padding="10"
+                                HorizontalOptions="FillAndExpand" />
 
-                    <!-- Link to login page -->
-                    <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Text="Already have an account? Login here."
-                           FontSize="14"
-                           TextColor="#1877f2"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding NavigateToLoginCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Grid>
+                        <Label Text="{Binding ResponseText}"
+                               TextColor="Red" />
+
+                        <!-- Odkaz na přihlašovací stránku -->
+                        <Label Text="Already have an account? Sign in here."
+                               FontSize="14"
+                               TextColor="#1877f2"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding NavigateToLoginCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </StackLayout>
+                </ScrollView>
             </Frame>
         </Grid>
     </ContentPage.Content>
