@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MiniProtoImpl;
 using MiniServer.Data.Model;
 
 
@@ -12,6 +13,7 @@ public interface IUserRepository
     Task<User> CreateUserAsync(string name, string email, string password);
     ValueTask<User?> FindById(string id);
     Task<long?> FindWithCredentials(string name, string password);
+    Task<List<ContactMsg>> SearchUsersAsync(string requestQuery);
 }
 
 public class UserRepository : IUserRepository
@@ -55,5 +57,16 @@ public class UserRepository : IUserRepository
             .Where(u => u.Username == name && u.Password == password)
             .Select(u => (long?)u.UserId)
             .FirstOrDefaultAsync();
+    }
+
+    public Task<List<ContactMsg>> SearchUsersAsync(string requestQuery) {
+        return _context.Users
+            .Where(u => u.Username.Contains(requestQuery) || u.Email.Contains(requestQuery))
+            .Select(u => new ContactMsg {
+                Uid = u.UserId,
+                Username = u.Username,
+                Status = "Stranger" // Todo - implement status
+            })
+            .ToListAsync();
     }
 }

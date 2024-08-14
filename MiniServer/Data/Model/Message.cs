@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MiniServer.Data.DTO;
 
 namespace MiniServer.Data.Model;
 
@@ -21,7 +22,22 @@ public class Message
     
     public long ReceiverId { get; set; }
     
+    public long ResponseToId { get; set; }
     public bool isDeleted { get; set; } = false;
     
+    public bool isEdited { get; set; } = false;
+    
     public DateTime Timestamp { get; set; }
+
+    public int MessageType { get; set; }
+    
+    // Due to the nature of edit,delete technical messages, we need to keep the original message
+    public long TargetId { get; set; }
+
+    public void EditFromDTO(MessageDTO message) {
+        this.Content = message.Content;
+        this.isEdited = true;
+        this.Timestamp = DateTime.UtcNow;
+        this.ResponseToId = message.ResponseToId;
+    }
 }

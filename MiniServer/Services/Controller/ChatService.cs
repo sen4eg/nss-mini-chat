@@ -35,6 +35,12 @@ public class ChatService : Chat.ChatBase {
         return taskCompletionSource.Task;
     }
 
+    /// <summary>
+    /// Add new user to database
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="context">Implicit parameter</param>
+    /// <returns> If successful: session token, refresh token </returns>
     public override Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
     {
         // Use the factory to create the event
@@ -44,6 +50,12 @@ public class ChatService : Chat.ChatBase {
         return HandleEventAsync(registerEvent);
     }
 
+    /// <summary>
+    /// Log in an existing user
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="context"></param>
+    /// <returns> If successful: session token, refresh token </returns>
     public override Task<ConnectResponse> Connect(ConnectRequest request, ServerCallContext context)
     {
         // Use the factory to create the event
@@ -53,6 +65,12 @@ public class ChatService : Chat.ChatBase {
         return HandleEventAsync(connectEvent);
     }
 
+    /// <summary>
+    /// Get a new session token when the previous session token is either close to expiring or has already expired
+    /// </summary>
+    /// <param name="request"> Contains the user, device and refresh token </param>
+    /// <param name="context"></param>
+    /// <returns> New session token </returns>
     public override Task<ConnectResponse> RefreshToken(RefreshTokenRequest request, ServerCallContext context)
     {
         // Use the factory to create the event
@@ -62,6 +80,14 @@ public class ChatService : Chat.ChatBase {
         return HandleEventAsync(refreshTokenEvent);
     }
 
+    /// <summary>
+    /// Use this at the beginning of program
+    /// Creates an async channel for the client to receive messages from the server
+    /// </summary>
+    /// <param name="requestStream"> Reference to async stream used for client to server communication </param>
+    /// <param name="responseStream"> Reference to async stream used for server to client communication </param>
+    /// <param name="context"></param>
+    /// <returns>Object containing the request and response stream</returns>
     public override Task InitiateAsyncChannel(IAsyncStreamReader<CommunicationRequest> requestStream, IServerStreamWriter<CommunicationResponse> responseStream,
         ServerCallContext context) {
         UserConnection userConnection = new  UserConnection(requestStream, responseStream, context);

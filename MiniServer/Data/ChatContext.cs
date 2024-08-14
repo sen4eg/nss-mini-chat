@@ -58,6 +58,11 @@ public class ChatContext : DbContext{
             .WithOne(gr => gr.User)
             .HasForeignKey(gr => gr.UserId);
 
+        modelBuilder.Entity<GroupSetting>()
+            .HasOne(gs => gs.Group)
+            .WithMany(g => g.GroupSettings)
+            .HasForeignKey(gs => gs.GroupId);
+        
         modelBuilder.Entity<Group>()
             .HasMany(g => g.GroupSettings)
             .WithOne(gs => gs.Group)
@@ -66,17 +71,14 @@ public class ChatContext : DbContext{
         modelBuilder.Entity<Group>()
             .HasMany(g => g.GroupRoles)
             .WithOne(gr => gr.Group)
-            .HasForeignKey(gr => gr.GroupId);
-
-        modelBuilder.Entity<GroupSetting>()
-            .HasOne(gs => gs.Group)
-            .WithMany(g => g.GroupSettings)
-            .HasForeignKey(gs => gs.GroupId);
-       
+            .HasForeignKey(gr => gr.GroupId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         modelBuilder.Entity<GroupRole>()
             .HasMany(gr => gr.Permissions)
             .WithOne(p => p.GroupRole)
-            .HasPrincipalKey(p => p.GroupRoleId);
+            .HasPrincipalKey(p => p.GroupRoleId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Contact>()
             .HasOne(c => c.User)

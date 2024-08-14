@@ -74,11 +74,14 @@ namespace MiniServer.Migrations
 
             modelBuilder.Entity("MiniServer.Data.Model.Contact", b =>
                 {
-                    b.Property<long>("ContactId")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ContactId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ContactId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("ContactTypeId")
                         .HasColumnType("integer");
@@ -86,7 +89,7 @@ namespace MiniServer.Migrations
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("ContactId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ContactTypeId");
 
@@ -120,10 +123,7 @@ namespace MiniServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("GroupId"));
 
-                    b.Property<int>("CreatorUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<long>("CreatorUserUserId")
+                    b.Property<long>("CreatorUserId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
@@ -136,7 +136,7 @@ namespace MiniServer.Migrations
 
                     b.HasKey("GroupId");
 
-                    b.HasIndex("CreatorUserUserId");
+                    b.HasIndex("CreatorUserId");
 
                     b.ToTable("Groups");
                 });
@@ -152,9 +152,8 @@ namespace MiniServer.Migrations
                     b.Property<int>("GroupRoleId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
                     b.HasKey("UserId", "GroupId");
 
@@ -201,7 +200,16 @@ namespace MiniServer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("MessageType")
+                        .HasColumnType("integer");
+
                     b.Property<long>("ReceiverId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ResponseToId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TargetId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("Timestamp")
@@ -211,6 +219,9 @@ namespace MiniServer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("isEdited")
                         .HasColumnType("boolean");
 
                     b.HasKey("MessageId");
@@ -320,7 +331,7 @@ namespace MiniServer.Migrations
                 {
                     b.HasOne("MiniServer.Data.Model.User", "CreatorUser")
                         .WithMany()
-                        .HasForeignKey("CreatorUserUserId")
+                        .HasForeignKey("CreatorUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -374,7 +385,7 @@ namespace MiniServer.Migrations
                         .WithMany("Permissions")
                         .HasForeignKey("GroupRoleId")
                         .HasPrincipalKey("GroupRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("GroupRole");

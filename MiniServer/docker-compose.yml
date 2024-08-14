@@ -10,3 +10,21 @@ services:
       POSTGRES_USER: dbadmin
     ports:
       - "5432:5432"
+    networks:
+      - mini_docker_network
+      
+  miniserver:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+    networks:
+      - mini_docker_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ChatContext=Host=db;Username=dbadmin;Password=verysecretpassword
+
+networks:
+  mini_docker_network:
+    driver: bridge

@@ -9,25 +9,43 @@
     <Grid RowDefinitions="Auto, *"
           Padding="8">
 
-        <CollectionView ItemsSource="{Binding Messages}">
+        <!-- TODO wrapping refresh view -->
+        
+        <CollectionView ItemsSource="{Binding ConversationObject.Messages}" x:DataType="{x:Null}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <ScrollView>
-                        <Label Text="{Binding .}" />
+                        <!-- TODO add swipe menu for android -->
+                        <Label Text="{Binding Contents}">
+                            <!-- Enable right-click menu on Windows -->
+                            <FlyoutBase.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem
+                                        Text="Edit"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationViewModel}}, Path=MarkForEditCommand}"
+                                        CommandParameter="{Binding .}"
+                                        /> 
+                                    <MenuFlyoutItem
+                                        Text="Delete"
+                                        /> <!-- TODO bind to function -->
+                                </MenuFlyout>
+                            </FlyoutBase.ContextFlyout>
+                        </Label>
+                               
+                        
+                        
                     </ScrollView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
-        <!-- Add conversation collection view above this line -->
-
+        
         <Entry x:Name="editor"
                    Grid.Row="1"
                    VerticalOptions="End"
                    Keyboard="Chat"
                    Placeholder="Message"
                    Text="{Binding MessageText}"
-                   ReturnCommand="{Binding SendMessageCommand}"
+                   ReturnCommand="{Binding SubmitCommand}"
                    />
     </Grid>
 </ContentPage>

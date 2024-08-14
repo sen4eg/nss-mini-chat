@@ -1,4 +1,4 @@
-﻿﻿using Grpc.Net.Client;
+﻿using Grpc.Net.Client;
 using MiniChat.Model;
 using MiniProtoImpl;
 

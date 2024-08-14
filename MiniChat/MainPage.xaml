@@ -38,7 +38,7 @@
                  IsEnabled="False"
                  SemanticProperties.Hint="Login page"
                  Clicked="OnLoginClickedAsync"
-                 HorizontalOptions="Fill" />
+                 HorizontalOptions="Fill" />    
         </VerticalStackLayout>
     </ScrollView>
 

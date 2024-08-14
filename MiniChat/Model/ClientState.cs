@@ -1,6 +1,5 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
-using Microsoft.VisualBasic;
 using MiniProtoImpl;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -17,8 +16,7 @@ namespace MiniChat.Model
 
         private static ClientState? instance = null;
 
-        public static ClientState GetState()
-        {
+        public static ClientState GetState() {
             instance ??= new ClientState(); // .NET magic - read as "if(instance == null){instance = new ClientState();}
             return instance;
         }
@@ -31,11 +29,9 @@ namespace MiniChat.Model
         public Chat.ChatClient? Client { get; set; } = null;  // used to make calls to the server
 
         private AsyncDuplexStreamingCall<CommunicationRequest, CommunicationResponse>? _connectionObject = null;
-        public AsyncDuplexStreamingCall<CommunicationRequest, CommunicationResponse>? ConnectionObject
-        {
+        public AsyncDuplexStreamingCall<CommunicationRequest, CommunicationResponse>? ConnectionObject {
             private get => _connectionObject;
-            set
-            {
+            set {
                 _connectionObject = value;
                 _responseReader = _connectionObject.ResponseStream.ReadAllAsync();
                 Thread responseThread = new Thread(new ThreadStart(HandleResponses));
@@ -80,6 +76,7 @@ namespace MiniChat.Model
                 SessionToken = response.Token;
                 //tokenValid = true;
             }
+
         }
 
         public ObservableCollection<Conversation> Conversations { get; set; } = [];
@@ -89,37 +86,37 @@ namespace MiniChat.Model
             Trace.WriteLine("Started listener thread");
             while (true)
             {
-                await foreach (var response in ResponseStreamReader)
+                await foreach(var response in ResponseStreamReader)
                 {
                     switch (response.ContentCase)
                     {
                         // response to requestUpdate
                         case CommunicationResponse.ContentOneofCase.ContactsMessage:
-                            foreach (Dialog dialog in response.ContactsMessage.Dialogs)
+                            foreach(Dialog dialog in response.ContactsMessage.Dialogs)
                             {
                                 Conversations.Add(new Conversation(dialog));
                             }
-                            break;
-                        // response to receiving??? a message
+                        break;
+                        // response to receiving a message
                         case CommunicationResponse.ContentOneofCase.Message:
                             var message = response.Message;
-                            foreach (Conversation conversation in Conversations)
+                            foreach(Conversation conversation in Conversations)
                             {
-                                if (conversation.ContactID == message.ReceiverId)
+                                if(conversation.ContactID == message.ReceiverId)
                                 {
                                     conversation.Messages.Add(new Message(message));
                                     break;
                                 }
                             }
                             // TODO what should happen if no conversation is found
-                            break;
+                        break;
 
                         case CommunicationResponse.ContentOneofCase.DialogUpdate:
-                            foreach (Conversation conversation in Conversations)
+                            foreach(Conversation conversation in Conversations)
                             {
-                                if (conversation.ContactID == response.DialogUpdate.ContactId)
+                                if(conversation.ContactID == response.DialogUpdate.ContactId)
                                 {
-                                    foreach (var dialogUpdateMessage in response.DialogUpdate.Messages)
+                                    foreach(var dialogUpdateMessage in response.DialogUpdate.Messages)
                                     {
                                         conversation.Messages.Add(new Message(dialogUpdateMessage));
                                     }
@@ -130,13 +127,10 @@ namespace MiniChat.Model
                         default:
                             Trace.WriteLine(String.Format("Received unimplemented response of type \"%s\"", response.ContentCase.ToString()));
                             break;
-
                     }
                     Trace.WriteLine(response.ToString());
-
                 }
             }
         }
     }
 }
-

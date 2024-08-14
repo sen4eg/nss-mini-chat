@@ -7,14 +7,15 @@
              x:DataType="viewModel:ConversationSelectionViewModel">
     <ScrollView>
     <VerticalStackLayout Padding="24, 4">
-        <CollectionView ItemsSource="{Binding Messages}" x:DataType="{x:Null}">
+        <CollectionView ItemsSource="{Binding Conversations}" x:DataType="{x:Null}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame BorderColor="Black" Padding="5" Margin="8">
                         <!-- Add Gesture Recognizers for clicking on a conversation -->
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer 
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationSelectionViewModel}}, Path=TapConversationCommand}"/>
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationSelectionViewModel}}, Path=TapConversationCommand}"
+                                    CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
                         <Grid Padding="4">
                             <Grid.RowDefinitions>
@@ -35,10 +36,10 @@
                             <Label Grid.Row="0"
                                    Grid.Column="1"
                                    FontAttributes="Bold"
-                                   Text="{Binding Sender}"/>
+                                   Text="{Binding ContactHandle}"/>
                             <Label Grid.Row="1"
                                    Grid.Column="1"
-                                   Text="{Binding Contents}"/>
+                                   Text="{Binding TopMessage}"/>
                         </Grid>
                     </Frame>
                 </DataTemplate>
