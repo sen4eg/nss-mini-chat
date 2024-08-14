@@ -92,13 +92,12 @@ namespace MiniChat.ViewModel
 
                     if (response.IsSucceed)
                     {
-                        await Shell.Current.GoToAsync(nameof(LoginPage));
+                        await Shell.Current.GoToAsync(nameof(ConversationPage));
                     }
                     else
                     {
                         Trace.WriteLine(response.ToString);
-                        //ResponseText = "Registration failed. Please try again.";
-                        ResponseText = "OK.";
+                        ResponseText = "Registration failed. Please try again.";
                     }
                 }
                 else
