@@ -61,7 +61,7 @@ namespace MiniChat.ViewModel
                 communicationRequest.Message = new MiniProtoImpl.Message
                 {
                     ReceiverId = ConversationObject.ContactID,
-                    Message_ = MessageText,
+                    Content = MessageText,
                 };
             }
             else

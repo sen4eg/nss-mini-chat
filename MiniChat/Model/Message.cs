@@ -15,7 +15,7 @@ namespace MiniChat.Model
         /// Constructor using the server definition for a message
         /// </summary>
         /// <param name="message">Message to convert</param>
-        public Message(MiniProtoImpl.Message message) : this(message.Id, message.AuthorId.ToString(), message.Message_) { }
+        public Message(MiniProtoImpl.Message message) : this(message.Id, message.AuthorId.ToString(), message.Content) { }
 
         public long Id {get; private set;} = id;
         public String Sender { get; set; } = sender;
@@ -23,3 +23,5 @@ namespace MiniChat.Model
         // TODO add timestamp
     }
 }
+
+
