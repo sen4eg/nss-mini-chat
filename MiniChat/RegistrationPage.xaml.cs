@@ -1,12 +1,14 @@
 using MiniChat.ViewModel;
 
-namespace MiniChat;
-
-public partial class RegistrationPage : ContentPage
+namespace MiniChat
 {
-    public RegistrationPage()
+
+    public partial class RegistrationPage : ContentPage
     {
-        InitializeComponent();
-        BindingContext = new RegistrationViewModel();
+        public RegistrationPage()
+        {
+            InitializeComponent();
+            BindingContext = new RegistrationViewModel();
+        }
     }
 }

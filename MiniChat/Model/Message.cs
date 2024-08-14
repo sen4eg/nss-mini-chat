@@ -23,3 +23,5 @@ namespace MiniChat.Model
         // TODO add timestamp
     }
 }
+
+
