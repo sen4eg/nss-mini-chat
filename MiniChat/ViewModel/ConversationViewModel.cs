@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 
 namespace MiniChat.ViewModel
 {
+    /// <summary>
+    /// Page for displaying a single conversation. This conversation is supplied as a Query attribute.
+    /// Without the query attribute, an Exception will occur
+    /// </summary>
     public partial class ConversationViewModel : ObservableObject, IQueryAttributable
     {
 

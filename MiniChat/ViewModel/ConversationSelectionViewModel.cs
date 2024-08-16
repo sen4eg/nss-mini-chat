@@ -7,6 +7,10 @@ using System.Diagnostics;
 
 namespace MiniChat.ViewModel
 {   
+    /// <summary>
+    /// Page that displays a selection of conversations.
+    /// Clicking a conversation redirects to that conversation's individual page
+    /// </summary>
     public partial class ConversationSelectionViewModel : ObservableObject
     {   
 
@@ -22,6 +26,11 @@ namespace MiniChat.ViewModel
             RequestMessages();
         }
 
+        /// <summary>
+        /// Navigate to the selected conversation
+        /// </summary>
+        /// <param name="conversation"> The particular conversation to navigate to </param>
+        /// <returns></returns>
         [RelayCommand]
         async Task TapConversation(Conversation conversation)
         {
