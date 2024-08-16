@@ -83,7 +83,7 @@ namespace MiniChat.ViewModel
                     state.ConnectionObject = state.Client.InitiateAsyncChannel();
 
                     if (string.IsNullOrEmpty(state.SessionToken)) return;
-                    await Shell.Current.GoToAsync(nameof(ConversationPage));
+                    await Shell.Current.GoToAsync(nameof(ConversationSelectionPage));
 
                     ResponseText = "";
                 }
