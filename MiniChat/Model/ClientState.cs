@@ -1,6 +1,8 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
+using MiniChat.ViewModel;
 using MiniProtoImpl;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -81,6 +83,8 @@ namespace MiniChat.Model
 
         public ObservableCollection<Conversation> Conversations { get; set; } = [];
 
+        public ObservableCollection<User> Contacts { get; set; } = [];
+
         async void HandleResponses()
         {
             Trace.WriteLine("Started listener thread");
@@ -123,6 +127,9 @@ namespace MiniChat.Model
                                     break;
                                 }
                             }
+                            break;
+                        case CommunicationResponse.ContentOneofCase.SearchResponse:
+                            //TODO wtf
                             break;
                         default:
                             Trace.WriteLine(String.Format("Received unimplemented response of type \"%s\"", response.ContentCase.ToString()));

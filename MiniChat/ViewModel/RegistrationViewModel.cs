@@ -92,8 +92,10 @@ namespace MiniChat.ViewModel
 
                     if (response.IsSucceed)
                     {
+                        // TODO make this a function to be reused when logging in!
                         state.SessionToken = response.Token;
                         state.RefreshToken = response.RefreshToken;
+                        state.ConnectionObject = state.Client.InitiateAsyncChannel();
                         await Shell.Current.GoToAsync(nameof(ConversationSelectionPage));
                     }
                     else

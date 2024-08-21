@@ -10,6 +10,7 @@
             Routing.RegisterRoute(nameof(ConversationSelectionPage), typeof(ConversationSelectionPage));
             Routing.RegisterRoute(nameof(ConversationPage), typeof(ConversationPage));
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+            Routing.RegisterRoute(nameof(AddConversationPage), typeof(AddConversationPage));
         }
     }
 }

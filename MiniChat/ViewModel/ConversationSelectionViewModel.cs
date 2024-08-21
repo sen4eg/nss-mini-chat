@@ -6,16 +6,16 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace MiniChat.ViewModel
-{   
+{
     /// <summary>
     /// Page that displays a selection of conversations.
     /// Clicking a conversation redirects to that conversation's individual page
     /// </summary>
     public partial class ConversationSelectionViewModel : ObservableObject
-    {   
+    {
 
         private ClientState state;
-        
+
         [ObservableProperty]
         ObservableCollection<MiniChat.Model.Conversation> conversations = [];
 
@@ -36,6 +36,12 @@ namespace MiniChat.ViewModel
         {
             Trace.WriteLine(conversation.ToString());
             await Shell.Current.GoToAsync(nameof(ConversationPage), new Dictionary<String, Object> { { "ConversationObject", conversation } });
+        }
+
+        [RelayCommand]
+        async Task TapAddConversation()
+        {
+            await Shell.Current.GoToAsync(nameof(AddConversationPage));
         }
 
         private void RequestMessages()
