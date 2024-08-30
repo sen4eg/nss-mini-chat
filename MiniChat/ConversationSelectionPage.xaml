@@ -45,6 +45,7 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </VerticalStackLayout>
+            <Button HorizontalOptions="End" Text="Add" Command="{Binding TapAddConversationCommand}"/>
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

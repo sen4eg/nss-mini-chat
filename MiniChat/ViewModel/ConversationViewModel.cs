@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 
 namespace MiniChat.ViewModel
 {
+    /// <summary>
+    /// Page for displaying a single conversation. This conversation is supplied as a Query attribute.
+    /// Without the query attribute, an Exception will occur
+    /// </summary>
     public partial class ConversationViewModel : ObservableObject, IQueryAttributable
     {
 
@@ -61,7 +65,7 @@ namespace MiniChat.ViewModel
                 communicationRequest.Message = new MiniProtoImpl.Message
                 {
                     ReceiverId = ConversationObject.ContactID,
-                    Message_ = MessageText,
+                    Content = MessageText,
                 };
             }
             else
@@ -99,7 +103,7 @@ namespace MiniChat.ViewModel
                 {
                     Count = 10,
                     DialogId = ConversationObject.ContactID,
-                    LastMessageId = ConversationObject.LastMessage,
+                    LastMessageId = ConversationObject.LastMessageId,
                     Offset = ConversationObject.Messages.Count
                 }
             };

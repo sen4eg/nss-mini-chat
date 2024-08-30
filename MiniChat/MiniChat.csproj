@@ -67,6 +67,9 @@
 	  <Compile Update="ConversationPage.xaml.cs">
 	    <DependentUpon>ConversationPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="AddConversationPage.xaml.cs">
+	    <DependentUpon>AddConversationPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 
@@ -78,6 +81,9 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="ConversationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="AddConversationPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>

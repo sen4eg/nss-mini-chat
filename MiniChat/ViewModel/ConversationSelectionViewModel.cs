@@ -6,12 +6,16 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace MiniChat.ViewModel
-{   
+{
+    /// <summary>
+    /// Page that displays a selection of conversations.
+    /// Clicking a conversation redirects to that conversation's individual page
+    /// </summary>
     public partial class ConversationSelectionViewModel : ObservableObject
-    {   
+    {
 
         private ClientState state;
-        
+
         [ObservableProperty]
         ObservableCollection<MiniChat.Model.Conversation> conversations = [];
 
@@ -19,9 +23,14 @@ namespace MiniChat.ViewModel
         {
             state = ClientState.GetState();
             conversations = state.Conversations;
-            RequestMessages();
+            //RequestMessages();
         }
 
+        /// <summary>
+        /// Navigate to the selected conversation
+        /// </summary>
+        /// <param name="conversation"> The particular conversation to navigate to </param>
+        /// <returns></returns>
         [RelayCommand]
         async Task TapConversation(Conversation conversation)
         {
@@ -29,8 +38,16 @@ namespace MiniChat.ViewModel
             await Shell.Current.GoToAsync(nameof(ConversationPage), new Dictionary<String, Object> { { "ConversationObject", conversation } });
         }
 
-        private void RequestMessages()
+        [RelayCommand]
+        async Task TapAddConversation()
         {
+            await Shell.Current.GoToAsync(nameof(AddConversationPage));
+        }
+
+        public void RequestMessages()
+        {
+            // Only call when conversations are empty
+            if (Conversations.Count > 0) return; 
             CommunicationRequest communicationRequest = new()
             {
                 Token = state.SessionToken,

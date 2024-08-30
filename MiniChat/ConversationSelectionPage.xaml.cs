@@ -1,12 +1,23 @@
-namespace MiniChat;
-
 using MiniChat.ViewModel;
+using System.Diagnostics;
 
-public partial class ConversationSelectionPage : ContentPage
+namespace MiniChat
 {
-	public ConversationSelectionPage(ConversationSelectionViewModel vm)
-	{
-		InitializeComponent();
-		BindingContext = vm;
-	}
+    public partial class ConversationSelectionPage : ContentPage
+    {
+        ConversationSelectionViewModel viewModel;
+        public ConversationSelectionPage(ConversationSelectionViewModel vm)
+        {
+            InitializeComponent();
+            viewModel = vm;
+            BindingContext = vm;
+        }
+
+        protected override void OnNavigatedTo(NavigatedToEventArgs args)
+        {
+            Trace.WriteLine("OnNavigatedTo");
+            viewModel.RequestMessages();
+            base.OnNavigatedTo(args);
+        }
+    }
 }

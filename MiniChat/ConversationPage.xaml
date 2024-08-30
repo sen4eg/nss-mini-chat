@@ -17,6 +17,16 @@
                     <ScrollView>
                         <!-- TODO add swipe menu for android -->
                         <Label Text="{Binding Contents}">
+                            <Label.Style>
+                                <Style TargetType="Label">
+                                    <Style.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsReceived}" Value="True">
+                                            <Setter Property="HorizontalOptions" Value="End"/>
+                                            <Setter Property="TextColor" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Label.Style>
                             <!-- Enable right-click menu on Windows -->
                             <FlyoutBase.ContextFlyout>
                                 <MenuFlyout>

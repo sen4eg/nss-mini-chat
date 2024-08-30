@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MiniChat.AddConversationPage"
+             Title="Add conversation"
+             xmlns:viewModel="clr-namespace:MiniChat.ViewModel"
+             x:DataType="viewModel:AddConversationViewModel">
+    <VerticalStackLayout>
+        <Entry Text="{Binding UserQuery}"
+               ReturnCommand="{Binding SendQueryCommand}"/>
+
+        <CollectionView ItemsSource="{Binding SearchResults}" x:DataType="{x:Null}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="Black" Padding="5" Margin="8">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer 
+         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:AddConversationViewModel}}, Path=TapUserCommand}"
+         CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+                        <Label Text="{Binding Username}"/>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
