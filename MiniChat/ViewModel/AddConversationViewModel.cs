@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.VisualBasic;
 using MiniChat.Model;
 using MiniProtoImpl;
 using System;
@@ -16,16 +17,21 @@ namespace MiniChat.ViewModel
         private ClientState state = ClientState.GetState();
 
         [ObservableProperty]
-        ObservableCollection<MiniProtoImpl.ContactMsg> contacts = [];
+        ObservableCollection<User> searchResults = [];
 
         [ObservableProperty]
         string userQuery = string.Empty;
 
         public AddConversationViewModel()
         {
-           
+            searchResults = state.LastSearchResults;
         }
 
+        [RelayCommand]
+        public async Task TapUser(User user)
+        {
+            await Shell.Current.GoToAsync(nameof(ConversationPage), new Dictionary<String, Object> { { "ConversationObject", new Conversation(user.Id, null, 0) } });
+        }
 
         [RelayCommand]
         public async Task SendQuery()

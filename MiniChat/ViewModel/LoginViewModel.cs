@@ -23,7 +23,7 @@ namespace MiniChat.ViewModel
         private bool _showPassword;
 
         [ObservableProperty]
-        private string _responseText;
+        private string _responseText = string.Empty;
 
         public bool HidePassword => !ShowPassword;
         public bool IsLoginButtonEnabled => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password);
@@ -55,16 +55,6 @@ namespace MiniChat.ViewModel
         {
             try
             {
-                state.Channel = GrpcChannel.ForAddress("http://localhost:5244"); // make sure to use right port, maybe add posibility to set it along with ip for development stage
-                state.Client = new MiniProtoImpl.Chat.ChatClient(state.Channel);
-
-                state.UserDevice ??= new MiniProtoImpl.Device // if device is null, then:...
-                {
-                    Ip = "localhost", // TODO get device IP address
-                    Name = DeviceInfo.Name,
-                    Os = DeviceInfo.Platform.ToString()
-                };
-
                 var response = state.Client.Connect(new MiniProtoImpl.ConnectRequest
                 {
                     Credentials = new MiniProtoImpl.Credentials
@@ -77,10 +67,9 @@ namespace MiniChat.ViewModel
 
                 if (response.IsSucceed)
                 {
-                    state.SessionToken = response.Token;
-                    state.RefreshToken = response.RefreshToken;
+                    state.LogUserIn(response.Token, response.RefreshToken);
 
-                    state.ConnectionObject = state.Client.InitiateAsyncChannel();
+                    //state.ConnectionObject = state.Client.InitiateAsyncChannel();
 
                     if (string.IsNullOrEmpty(state.SessionToken)) return;
                     await Shell.Current.GoToAsync(nameof(ConversationSelectionPage));
@@ -107,7 +96,7 @@ namespace MiniChat.ViewModel
 
         private async Task OnCreateAccountAsync()
         {
-            await App.Current.MainPage.Navigation.PushAsync(new RegistrationPage());
+            await Shell.Current.GoToAsync(nameof( RegistrationPage));
         }
 
         partial void OnShowPasswordChanged(bool value)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MiniChat.Model
 {
-    public class Conversation(long contactID, Message lastMessage, long unreadCount)//NOTE: this is the Class definition AND primary constructor (thank you C#)
+    public class Conversation(long contactID, Message? lastMessage, long unreadCount)//NOTE: this is the Class definition AND primary constructor (thank you C#)
     {
 
         public Conversation(Dialog dialog) : this(dialog.ContactId, new Message(dialog.LastMessage), dialog.UnreadCount)
@@ -19,10 +19,18 @@ namespace MiniChat.Model
         public long ContactID = contactID;
         public long UnreadCount = unreadCount;
 
+        public Message? LastMessage
+        {
+            get => Messages.Count > 0 ? Messages.Last() : null;
+        }
+
         /// <summary>
         /// ID of last message received
         /// </summary>
-        public long LastMessage = lastMessage.Id;
+        public long LastMessageId
+        {
+            get => LastMessage != null ? LastMessage.Id : 0;
+        } 
 
         /// <summary>
         /// Screen name of the other participant or participants of the conversation

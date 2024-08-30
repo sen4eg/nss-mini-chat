@@ -23,7 +23,7 @@ namespace MiniChat.ViewModel
         {
             state = ClientState.GetState();
             conversations = state.Conversations;
-            RequestMessages();
+            //RequestMessages();
         }
 
         /// <summary>
@@ -44,8 +44,10 @@ namespace MiniChat.ViewModel
             await Shell.Current.GoToAsync(nameof(AddConversationPage));
         }
 
-        private void RequestMessages()
+        public void RequestMessages()
         {
+            // Only call when conversations are empty
+            if (Conversations.Count > 0) return; 
             CommunicationRequest communicationRequest = new()
             {
                 Token = state.SessionToken,

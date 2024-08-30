@@ -22,6 +22,8 @@ namespace MiniChat
             // --------- ADD PAGES -----------
             builder.Services.AddSingleton<LoginPage>();
             builder.Services.AddSingleton<LoginViewModel>();
+            builder.Services.AddSingleton<RegistrationPage>();
+            builder.Services.AddSingleton<RegistrationViewModel>();
             builder.Services.AddSingleton<ConversationSelectionPage>();
             builder.Services.AddSingleton<ConversationSelectionViewModel>();
             builder.Services.AddSingleton<AddConversationPage>();

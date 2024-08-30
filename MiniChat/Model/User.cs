@@ -7,12 +7,20 @@ using System.Threading.Tasks;
 
 namespace MiniChat.Model
 {
-    public class User
+    public enum UserRelation
     {
-        public long Id { get; set; }
-        public string Username { get; set; } = string.Empty;
+        NOT_FRIENDS,
+        FRIENDS,
+        BLOCKED,
+        UNKNOWN
+    }
+    public class User(long id, string username, UserRelation relation)
+    {
+        public User(long id) : this(id, string.Empty, UserRelation.UNKNOWN) { }
+        public long Id { get; set; } = id;
+        public string Username { get; set; } = username;
         public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+        public UserRelation Relation { get; set; } = relation;
     }
 }
 

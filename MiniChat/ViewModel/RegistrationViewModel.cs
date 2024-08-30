@@ -69,16 +69,6 @@ namespace MiniChat.ViewModel
             {
                 if (VerifyPasswords())
                 {
-                    state.Channel = GrpcChannel.ForAddress("http://localhost:5244"); // Update the address and port as needed
-                    state.Client = new MiniProtoImpl.Chat.ChatClient(state.Channel);
-
-                    state.UserDevice ??= new MiniProtoImpl.Device // if device is null, then:...
-                    {
-                        Ip = "localhost", // TODO get device IP address
-                        Name = DeviceInfo.Name,
-                        Os = DeviceInfo.Platform.ToString()
-                    };
-
                     var response = state.Client.Register(new MiniProtoImpl.RegisterRequest
                     {
                         Credentials = new MiniProtoImpl.Credentials
@@ -93,9 +83,8 @@ namespace MiniChat.ViewModel
                     if (response.IsSucceed)
                     {
                         // TODO make this a function to be reused when logging in!
-                        state.SessionToken = response.Token;
-                        state.RefreshToken = response.RefreshToken;
-                        state.ConnectionObject = state.Client.InitiateAsyncChannel();
+                        state.LogUserIn(response.Token, response.RefreshToken);
+                        //state.ConnectionObject = state.Client.InitiateAsyncChannel();
                         await Shell.Current.GoToAsync(nameof(ConversationSelectionPage));
                     }
                     else

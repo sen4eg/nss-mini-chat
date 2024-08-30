@@ -103,7 +103,7 @@ namespace MiniChat.ViewModel
                 {
                     Count = 10,
                     DialogId = ConversationObject.ContactID,
-                    LastMessageId = ConversationObject.LastMessage,
+                    LastMessageId = ConversationObject.LastMessageId,
                     Offset = ConversationObject.Messages.Count
                 }
             };
