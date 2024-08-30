@@ -38,9 +38,9 @@ public class ContactRepository : IContactRepository {
         var contacts = _context.Contacts.Where(c => c.UserId == authorizedRequestUserId)
             .Select(c => new Dialog {
             ContactId = c.ContactId,
-            ContactName = c.User.Username,
+            ContactName = _context.Users.Where(usr => usr.UserId == c.ContactId).Select(u => u.Username).FirstOrDefault(),
             LastMessage = new MessageDTO(
-                _context.Messages.Where(m => (m.UserId == authorizedRequestUserId || m.UserId == c.ContactId) && (m.MessageType == 0))
+                _context.Messages.Where(m => (m.UserId == authorizedRequestUserId && m.ReceiverId == c.ContactId || m.ReceiverId == authorizedRequestUserId && m.UserId == c.ContactId) && (m.MessageType == 0))
                     .OrderByDescending(m => m.Timestamp)
                     .FirstOrDefault()
                 ).ConvertToGrpcMessage(),

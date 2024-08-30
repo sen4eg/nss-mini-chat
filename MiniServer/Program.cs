@@ -38,6 +38,7 @@ namespace MiniServer
             builder.Services.AddSingleton<IConnectionManager, ConnectionManager>();
             builder.Services.AddTransient<IPersistenceService, PersistenceService>();
             builder.Services.AddTransient<IContactService, ContactService>();
+            builder.Services.AddTransient<ISearchService, SearchService>();
 
             var app = builder.Build();
 

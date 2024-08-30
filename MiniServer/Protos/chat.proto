@@ -9,10 +9,19 @@ service Chat {
     rpc Register(RegisterRequest) returns (RegisterResponse) {}
     rpc Connect(ConnectRequest) returns (ConnectResponse) {}
     rpc RefreshToken(RefreshTokenRequest) returns (ConnectResponse) {}
+    rpc AskUserInfo(TokenMessage) returns (IDMessage) {}
     rpc InitiateAsyncChannel(stream CommunicationRequest) returns (stream CommunicationResponse) {} // Pipe for messages
 }
 
 // TODO: At this very stage protos
+message TokenMessage {
+    string token = 1;
+}
+
+message IDMessage {
+    int64 id = 1;
+}
+
 
 message Device {
     string name = 1; // device name
@@ -160,6 +169,11 @@ message UserInfoResponse{
     repeated UserInfo users = 1;
 }
 
+message SetPersonStatus{
+    int64 uid = 1;
+    string status = 2; // Stranger, Contact, BlockedBy, BlockedHim
+}
+
 message CommunicationRequest {
     string token = 7;
     oneof content {
@@ -177,7 +191,9 @@ message CommunicationRequest {
         
         SearchRequest search = 11;
         FetchUserInfoRequest fetch_users = 12;
-        // Search?
+        
+        SetPersonStatus set_person_status = 13;
+        
         // Settings?
     }
 }

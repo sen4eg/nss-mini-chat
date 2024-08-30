@@ -247,3 +247,19 @@ public class FetchUsersEvent : EventBase<AuthorizedRequest<FetchUserInfoRequest>
         return _authorizedRequest;
     }
 }
+
+
+public class SetUserStatusEvent : EventBase<AuthorizedRequest<SetPersonStatus>> {
+    private readonly AuthorizedRequest<SetPersonStatus> _authorizedRequest;
+    private readonly ISearchService _userService;
+
+    public SetUserStatusEvent(AuthorizedRequest<SetPersonStatus> authorizedRequest, ISearchService searchService, Action sideEffect) : base(sideEffect) {
+        _authorizedRequest = authorizedRequest;
+        _userService = searchService;
+    }
+
+    protected override async Task<AuthorizedRequest<SetPersonStatus>> ExecuteAsync() {
+        await _userService.SetUserStatus(_authorizedRequest);
+        return _authorizedRequest;
+    }
+}

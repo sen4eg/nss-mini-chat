@@ -2,6 +2,7 @@
 using MiniProtoImpl;
 using MiniServer.Core;
 using MiniServer.Core.Events;
+using MiniServer.Utils;
 
 namespace MiniServer.Services.Controller; 
 
@@ -97,5 +98,13 @@ public class ChatService : Chat.ChatBase {
         HandleEventAsync(userConnectedEvent);
             
         return userConnection.Tcs.Task;
+    }
+    
+    public  override Task<IDMessage> AskUserInfo(TokenMessage request, ServerCallContext context) {
+        var tokenIdentity = request.Token;
+        TokenHelper.DecipherToken(tokenIdentity, out var identity);
+        var id = new TokenIdentity(identity);
+        var userId = id.GetUserId();
+        return Task.FromResult(new IDMessage { Id = long.Parse(userId) });
     }
 }

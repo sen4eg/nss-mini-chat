@@ -9,6 +9,7 @@ public interface ISearchService
     // Add methods as needed
     Task Search(AuthorizedRequest<SearchRequest> authorizedRequest);
     Task FetchUsers(AuthorizedRequest<FetchUserInfoRequest> authorizedRequest);
+    Task SetUserStatus(AuthorizedRequest<SetPersonStatus> authorizedRequest);
 }
 
 public class SearchService : ISearchService
@@ -43,5 +44,10 @@ public class SearchService : ISearchService
                 Users = { await Task.WhenAll(users) }
             }
         });
+    }
+
+    public Task SetUserStatus(AuthorizedRequest<SetPersonStatus> authorizedRequest) {
+        
+        return Task.CompletedTask;
     }
 }

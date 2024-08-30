@@ -310,6 +310,17 @@ namespace MiniServer.Core {
                     
                     break;
                 }
+                case CommunicationRequest.ContentOneofCase.SetPersonStatus: {
+                    var evnt = _commEventFactory.Create<SetUserStatusEvent, AuthorizedRequest<SetPersonStatus>>(
+                        new AuthorizedRequest<SetPersonStatus>(Convert.ToInt64(userId), msg.SetPersonStatus, user),
+                        () => _logger.LogInformation($"Set person status by {userId}"));
+                    var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<SetPersonStatus>>();
+                    _eventDispatcher.EnqueueEvent(async () =>
+                    {
+                        await evnt.Execute(taskCompletionSource);
+                    });
+                    break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
