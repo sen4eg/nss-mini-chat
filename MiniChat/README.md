@@ -1,3 +1,11 @@
+Frontend side of the project
+
+Used design patterns:
+   - Singleton (Model/ClientState.cs)
+   - Adapter (Model/Message.cs : line 18)
+
+Cache: no
+
 ## Setup Instructions
 
 Before building the project, please generate the necessary transport layer files using the following steps:
