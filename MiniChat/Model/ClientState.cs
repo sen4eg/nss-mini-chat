@@ -36,25 +36,7 @@ namespace MiniChat.Model
 
         public User? CurrentUser { get; set; } = null;
 
-        public long UserID
-        {
-            get
-            {
-                foreach(var conversation in Conversations)
-                {   
-                    long otherID = conversation.ContactID;
-                    foreach(var message in conversation.Messages)
-                    {
-                        if (message.Sender != otherID)
-                        {
-                            Trace.WriteLine(String.Format("I think my ID is {0}", message.Sender));
-                            return message.Sender;
-                        }
-                    }
-                }
-                return 0;
-            }
-        }
+        public long UserID { get; set; }
 
 
         public string SessionToken = string.Empty;
@@ -126,13 +108,17 @@ namespace MiniChat.Model
         /// </summary>
         /// <param name="sessionToken"></param>
         /// <param name="refreshToken"></param>
-        public void LogUserIn(string sessionToken, string refreshToken)
+        public async void LogUserIn(string sessionToken, string refreshToken)
         {
             // log out active user first
             LogUserOut();
 
             SessionToken = sessionToken;
             RefreshToken = refreshToken;
+
+            // find own ID from server
+            if (Client == null) return;
+            UserID = Client.AskUserInfo(new TokenMessage { Token = sessionToken }).Id;
         }
 
         /// <summary>
@@ -145,6 +131,7 @@ namespace MiniChat.Model
             Conversations.Clear();
             Contacts.Clear();
             LastSearchResults.Clear();
+            UserID = 0;
         }
 
         async void HandleResponses()
@@ -184,7 +171,7 @@ namespace MiniChat.Model
                                 {
                                     foreach(var dialogUpdateMessage in response.DialogUpdate.Messages)
                                     {
-                                        conversation.Messages.Add(new Message(dialogUpdateMessage));
+                                        conversation.AddMessage(new Message(dialogUpdateMessage));
                                     }
                                     break;
                                 }

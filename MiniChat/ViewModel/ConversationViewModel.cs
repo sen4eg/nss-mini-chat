@@ -94,6 +94,21 @@ namespace MiniChat.ViewModel
             editedMessage = null;
         }
 
+        [RelayCommand]
+        void DeleteMessage(Model.Message message)
+        {
+            CommunicationRequest communicationRequest = new()
+            {
+                Token = state.SessionToken,
+                DeleteMessage = new DeleteMessageRequest
+                {
+                    Id = message.Id,
+                }
+            };
+
+            state.RequestStream?.WriteAsync(communicationRequest);
+        }
+
         private void RequestMessages() {
             Trace.WriteLine("RequestMessage was called");
             MiniProtoImpl.CommunicationRequest request = new()

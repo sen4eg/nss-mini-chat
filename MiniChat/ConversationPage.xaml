@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MiniChat.Model"
              x:Class="MiniChat.ConversationPage"
              Title="ConversationPage"
              xmlns:viewModel="clr-namespace:MiniChat.ViewModel"
@@ -11,39 +12,58 @@
 
         <!-- TODO wrapping refresh view -->
         
-        <CollectionView ItemsSource="{Binding ConversationObject.Messages}" x:DataType="{x:Null}">
+        <CollectionView ItemsSource="{Binding ConversationObject.Messages}" >
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="{x:Type local:Message}">
                     <ScrollView>
                         <!-- TODO add swipe menu for android -->
-                        <Label Text="{Binding Contents}">
-                            <Label.Style>
-                                <Style TargetType="Label">
+                        <Frame Margin="3" CornerRadius="25">
+                            <Frame.Style>
+                                <Style TargetType="Frame">
                                     <Style.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding IsReceived}" Value="True">
+                                        <DataTrigger TargetType="Frame" Binding="{Binding IsReceived}" Value="False">
                                             <Setter Property="HorizontalOptions" Value="End"/>
-                                            <Setter Property="TextColor" Value="Red"/>
+                                            <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Frame" Binding="{Binding IsReceived}" Value="True">
+                                            <Setter Property="HorizontalOptions" Value="Start"/>
+                                            <Setter Property="BackgroundColor" Value="White"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </Label.Style>
+                            </Frame.Style>
                             <!-- Enable right-click menu on Windows -->
-                            <FlyoutBase.ContextFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem
-                                        Text="Edit"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationViewModel}}, Path=MarkForEditCommand}"
-                                        CommandParameter="{Binding .}"
-                                        /> 
-                                    <MenuFlyoutItem
-                                        Text="Delete"
-                                        /> <!-- TODO bind to function -->
-                                </MenuFlyout>
-                            </FlyoutBase.ContextFlyout>
-                        </Label>
-                               
-                        
-                        
+                            <!-- For some reason, the data binding only works when I use the flyoutBase on the label, and not the whole frame. I hate .NET. -->
+                            <Label Text="{Binding Contents}">
+                                <FlyoutBase.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem
+                                                 Text="Edit"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationViewModel}}, Path=MarkForEditCommand}"
+                                                 CommandParameter="{Binding .}"
+                                                 />
+                                        <MenuFlyoutItem
+                                                Text="Delete"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationViewModel}}, Path=DeleteMessageCommand}"
+                                                CommandParameter="{Binding .}"                                            
+                                                 />
+                                        <!-- TODO bind to function -->
+                                    </MenuFlyout>
+                                </FlyoutBase.ContextFlyout>
+                                <Label.Style>
+                                    <Style TargetType="Label">
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsReceived}" Value="False">
+                                                <Setter Property="TextColor" Value="White"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsReceived}" Value="True">
+                                                <Setter Property="TextColor" Value="Black"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
+                        </Frame>
                     </ScrollView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

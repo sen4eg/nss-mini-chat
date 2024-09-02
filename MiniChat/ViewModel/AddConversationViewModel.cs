@@ -30,7 +30,7 @@ namespace MiniChat.ViewModel
         [RelayCommand]
         public async Task TapUser(User user)
         {
-            await Shell.Current.GoToAsync(nameof(ConversationPage), new Dictionary<String, Object> { { "ConversationObject", new Conversation(user.Id, null, 0) } });
+            await Shell.Current.GoToAsync(nameof(ConversationPage), new Dictionary<String, Object> { { "ConversationObject", new Conversation(user.Id, user.Username, null, 0) } });
         }
 
         [RelayCommand]
