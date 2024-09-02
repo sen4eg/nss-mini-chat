@@ -6,46 +6,47 @@
              Title="RegistrationPage"
              BackgroundColor="#f2f5f5">
 
-	<ContentPage.BindingContext>
-		<vm:RegistrationViewModel />
-	</ContentPage.BindingContext>
+    <ContentPage.BindingContext>
+        <vm:RegistrationViewModel />
+    </ContentPage.BindingContext>
 
-	<ContentPage.Content>
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="*" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-			<!-- Levá strana -->
-			<StackLayout Grid.Row="0" Grid.Column="0" Margin="60,0,0,100" VerticalOptions="Center">
-				<Image Source="dotnet_bot.png" HeightRequest="100" Aspect="AspectFit" HorizontalOptions="Center" />
-				<Label Text="MiniChat" FontSize="48" FontAttributes="Bold" TextColor="#1877f2" HorizontalOptions="Center" />
+            <!-- Levá strana -->
+            <StackLayout x:Name="LeftPanel" Grid.Row="0" Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center" Margin="60,0,0,100">
+                <Image Source="dotnet_bot.png" HeightRequest="100" Aspect="AspectFit" HorizontalOptions="Center" />
+                <Label Text="MiniChat" FontSize="48" FontAttributes="Bold" TextColor="#1877f2" HorizontalOptions="Center" />
                 <Label Text="Connect with friends and the world around you on MiniChat." FontSize="24" TextColor="Black" HorizontalOptions="Center" Margin="0,20,0,0" />
-			</StackLayout>
+            </StackLayout>
 
-			<!-- Pravá strana -->
-			<Frame Grid.Row="0" Grid.Column="1" Padding="50" Margin="30" CornerRadius="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" HasShadow="True" WidthRequest="425">
-				<ScrollView>
-					<StackLayout Spacing="20">
-						<!-- Nadpis -->
-						<Label Text="Registration" FontSize="28" HorizontalOptions="Center" />
+            <!-- Pravá strana (RegistrationPanel) -->
+            <Frame x:Name="RegistrationPanel" Grid.Row="0" Grid.Column="1" CornerRadius="30" BackgroundColor="White"
+                   VerticalOptions="Center" HorizontalOptions="Center" HasShadow="True"
+                   WidthRequest="400" Margin="10">
+                <ScrollView>
+                    <StackLayout Padding="30" Spacing="25" VerticalOptions="Center">
+                        <!-- Nadpis -->
+                        <Label Text="Registration" FontSize="24" HorizontalOptions="Center" />
 
-						<!-- Vstup pro uživatelské jméno -->
+                        <!-- Vstup pro uživatelské jméno -->
                         <Entry Placeholder="Username" Text="{Binding Username}" Keyboard="Default" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5"  ReturnCommand="{Binding RegistrationCommand}"/>
 
-						<!-- Vstup pro e-mail -->
+                        <!-- Vstup pro e-mail -->
                         <Entry Placeholder="Email" Text="{Binding Email}" Keyboard="Email" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5"  ReturnCommand="{Binding RegistrationCommand}"/>
 
-						<!-- Vstup pro heslo -->
+                        <!-- Vstup pro heslo -->
                         <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5"  ReturnCommand="{Binding RegistrationCommand}"/>
 
-						<!-- Potvrzení hesla -->
-						<Entry Placeholder="Confirm password" IsPassword="True" Text="{Binding ConfirmPassword}" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" ReturnCommand="{Binding RegistrationCommand}"/>
+                        <!-- Potvrzení hesla -->
+                        <Entry Placeholder="Confirm password" IsPassword="True" Text="{Binding ConfirmPassword}" FontSize="18" HeightRequest="50" BackgroundColor="#f0f2f5" ReturnCommand="{Binding RegistrationCommand}"/>
 
                         <!-- Tlačítko pro registraci -->
                         <Button Text="Sign up"
@@ -74,6 +75,45 @@
                     </StackLayout>
                 </ScrollView>
             </Frame>
+
+            <!-- VisualStateManager pro responzivní design -->
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="WidthStates">
+                    <!-- užší okna -->
+                    <VisualState x:Name="Narrow">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="0" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <!-- Skryje levý panel -->
+                            <Setter TargetName="LeftPanel" Property="IsVisible" Value="False" />
+                            <!-- Přesune RegistrationPanel do sloupce 0 -->
+                            <Setter TargetName="RegistrationPanel" Property="Grid.Column" Value="0" />
+                            <!-- Nastaví šířku RegistrationPanel na plnou šířku -->
+                            <Setter TargetName="RegistrationPanel" Property="WidthRequest" Value="375" />
+                            <!-- Margin pro RegistrationPanel -->
+                            <Setter TargetName="RegistrationPanel" Property="Margin" Value="10" />
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <!-- širší okna -->
+                    <VisualState x:Name="Wide">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="710" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <!-- Zobrazí levý panel -->
+                            <Setter TargetName="LeftPanel" Property="IsVisible" Value="True" />
+                            <!-- Přesune RegistrationPanel do sloupce 1 -->
+                            <Setter TargetName="RegistrationPanel" Property="Grid.Column" Value="1" />
+                            <!-- Nastaví šířku RegistrationPanel na 400px -->
+                            <Setter TargetName="RegistrationPanel" Property="WidthRequest" Value="400" />
+                            <!-- Margin pro RegistrationPanel -->
+                            <Setter TargetName="RegistrationPanel" Property="Margin" Value="10" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
