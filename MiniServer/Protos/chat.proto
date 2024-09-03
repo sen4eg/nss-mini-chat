@@ -178,8 +178,6 @@ message CommunicationRequest {
     string token = 7;
     oneof content {
         Message message = 1;
-        DeleteMessageRequest delete_message = 2;
-        EditMessageRequest edit_message = 10;
         
         CreateGroupRequest create_group = 3;
         DeleteGroupRequest delete_group = 4;

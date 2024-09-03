@@ -280,9 +280,7 @@ namespace MiniServer.Core {
                     
                     break;
                 }
-                case CommunicationRequest.ContentOneofCase.EditMessage:
-                    // Handle EditMessage case if needed
-                    break;
+                
                 case CommunicationRequest.ContentOneofCase.Search: {
 
 
