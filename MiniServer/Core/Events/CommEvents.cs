@@ -137,13 +137,13 @@ public class RequestDialogEvent : EventBase<AuthorizedRequest<RequestDialog>> {
 
 public class MessagePersistanceEvent : EventBase<MessageDTO> {
     private readonly MessageDTO _messageDto;
-    private readonly IPersistenceService _service;
-    public MessagePersistanceEvent(MessageDTO messageDto, IPersistenceService service,Action sideEffect) : base(sideEffect) {
+    private readonly IMessagingService _service;
+    public MessagePersistanceEvent(MessageDTO messageDto, IMessagingService service,Action sideEffect) : base(sideEffect) {
         _messageDto = messageDto;
         _service = service;
     }
     protected override async Task<MessageDTO> ExecuteAsync() {
-        await _service.SaveAsync(_messageDto.ConvertToDbModel());
+        await _service.HandleMsgSave(_messageDto);
         return _messageDto;
     }
 }

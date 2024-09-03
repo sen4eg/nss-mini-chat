@@ -42,7 +42,9 @@ public class MessageRepository : IMessageRepository{
     }
 
     public Task CreateMessageAsync(MessageDTO message) {
-        throw new NotImplementedException();
+        var messageEntity = message.ConvertToDbModel();
+        _context.Messages.Add(messageEntity);
+        return _context.SaveChangesAsync();
     }
 
     public Task<IEnumerable<MessageDTO>> GetMessagesAsync(long receiverId, long msgIdOffset, int count) {

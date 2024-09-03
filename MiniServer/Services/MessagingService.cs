@@ -11,6 +11,7 @@ public interface IMessagingService
     void MessageSent(AuthorizedRequest<Message> request);
     Task UpdateRequested(AuthorizedRequest<RequestUpdate> authorizedRequest);
     Task DialogRequested(AuthorizedRequest<RequestDialog> authorizedRequest);
+    Task HandleMsgSave(MessageDTO messageDto);
 }
 
 public class MessagingService : IMessagingService {
@@ -85,6 +86,19 @@ public class MessagingService : IMessagingService {
         foreach (var userConnection in cons) {
             userConnection.ResponseStream.WriteAsync(response);
         }
+        return Task.CompletedTask;
+    }
+
+    public Task HandleMsgSave(MessageDTO messageDto) {
+        switch (messageDto.MessageType) {
+            case 1:
+                _messageRepository.UpdateMessageAsync(messageDto);
+                break;
+            case 2:
+                _messageRepository.DeleteMessageAsync(messageDto.MessageId);
+                break;
+        }
+        _messageRepository.CreateMessageAsync(messageDto);
         return Task.CompletedTask;
     }
 
