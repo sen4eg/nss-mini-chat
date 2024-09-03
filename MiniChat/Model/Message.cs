@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MiniChat.Model
 {
-    public class Message(long id, long sender, long recipient, String contents, Timestamp timestamp)
+    public partial class Message(long id, long sender, long recipient, String contents, Timestamp timestamp) : ObservableObject
     {
 
         /// <summary>

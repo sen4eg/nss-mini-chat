@@ -153,13 +153,19 @@ namespace MiniChat.Model
                         // response to receiving a message
                         case CommunicationResponse.ContentOneofCase.Message:
                             var message = response.Message;
+                            bool conversationExists = false;
                             foreach(Conversation conversation in Conversations)
                             {
                                 if(conversation.ContactID == message.ReceiverId)
                                 {
-                                    conversation.Messages.Add(new Message(message));
+                                    conversation.AddMessage(new Message(message));
+                                    conversationExists = true;
                                     break;
                                 }
+                            }
+                            if (!conversationExists)
+                            {
+                                Conversations.Add(new Conversation(message.AuthorId, message.AuthorId.ToString(), new Message(message), 1));
                             }
                             // TODO what should happen if no conversation is found
                         break;

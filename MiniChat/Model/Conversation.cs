@@ -1,25 +1,29 @@
-﻿using MiniProtoImpl;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using MiniProtoImpl;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MiniChat.Model
 {
-    public class Conversation(long contactID, string contactHandle, Message? lastMessage, long unreadCount)//NOTE: this is the Class definition AND primary constructor (thank you C#)
+    public partial class Conversation(long contactID, string contactHandle, Message? lastMessage, long unreadCount) : ObservableObject //NOTE: this is the Class definition AND primary constructor (thank you C#)
     {
 
         public Conversation(Dialog dialog) : this(dialog.ContactId, dialog.ContactName, new Message(dialog.LastMessage), dialog.UnreadCount)
         {
         }
+
+        [ObservableProperty]
         private ObservableCollection<Message> messages = lastMessage == null ? [] : [lastMessage];
-        public ObservableCollection<Message> Messages { get => messages; private set => messages = value; }
         public void AddMessage (Message message)
         {
             Messages.Add(message);
             SortMessages();
+            //Trace.WriteLine(String.Format("New top message is {0}", TopMessage));
         }
 
         private void SortMessages()
