@@ -18,11 +18,22 @@ namespace MiniChat.Model
         public ObservableCollection<Message> Messages { get => messages; private set => messages = value; }
         public void AddMessage (Message message)
         {
-            Messages.Add(message);
-            SortMessages();
+
+            int index = 0;
+            for (int i = 0; i < Messages.Count; i++)
+            {
+                if (Messages[i].Timestamp >= message.Timestamp)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            Messages.Insert(index, message);
+            //Messages.Add(message);
+            //SortMessages();
         }
 
-        private void SortMessages()
+/*        private void SortMessages()
         {
             var sorted = Messages.OrderByDescending(message => message.Timestamp).ToList(); // Why descending bruh
             Messages.Clear();
@@ -31,7 +42,7 @@ namespace MiniChat.Model
                 Messages.Add(message);
             }
         }
-
+*/
         public long ContactID = contactID;
         public long UnreadCount = unreadCount;
         

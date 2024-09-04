@@ -50,7 +50,7 @@ public class MessagingService : IMessagingService {
     }
 
     public Task UpdateRequested(AuthorizedRequest<RequestUpdate> authorizedRequest) {
-        var messages = _messageRepository.GetDialogsForUser(authorizedRequest.UserId, authorizedRequest.Request.LastMessageId);
+//        var messages = _messageRepository.GetDialogsForUser(authorizedRequest.UserId, authorizedRequest.Request.LastMessageId);
         var cons = _connectionManager.GetOpenedConnection(authorizedRequest.UserId);
         if (cons == null) {
             return Task.CompletedTask;
@@ -91,11 +91,12 @@ public class MessagingService : IMessagingService {
 
     public Task HandleMsgSave(MessageDTO messageDto) {
         switch (messageDto.MessageType) {
-            case 1:
+            case 1: {
                 _messageRepository.UpdateMessageAsync(messageDto);
                 break;
+            }
             case 2:
-                _messageRepository.DeleteMessageAsync(messageDto.MessageId);
+                _messageRepository.DeleteMessageAsync(messageDto.TargetId, messageDto.UserId);
                 break;
         }
         _messageRepository.CreateMessageAsync(messageDto);
@@ -112,8 +113,7 @@ public class MessagingService : IMessagingService {
         var senderCons = _connectionManager.GetOpenedConnection(request.UserId);
         FireMessage(senderCons, msg); // tell the sender the message was sent
         FireMessage(cons, msg); // fire right away persist slowly
-        // TODO Consider caching here
-        _eventDispatcher.EnqueueEvent(() => messageEvent.Execute(new TaskCompletionSource<MessageDTO>()));
+        _eventDispatcher.EnqueueEvent(async () => await messageEvent.Execute(new TaskCompletionSource<MessageDTO>()));
         _contactService.UpdateDialog(msg.UserId, msg.ReceiverId);
     }
 

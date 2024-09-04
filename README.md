@@ -19,6 +19,9 @@ logu) (volitelné -2b pokud není)
 - vyuziti jedne z technologie: SOAP, REST, graphQL, Java RMI, Corba, XML-RPC (volitelné -2b
 pokud není) 
 - - gRPC misto toho
+- cloud services
+- - azure config in progress...
+
 
 Used design patterns:
    - Factory (MiniServer/Core/Events/EventFactory.cs)

@@ -7,7 +7,7 @@ public interface IMessageRepository
 {
     Task CreateMessageAsync(MessageDTO message);
     Task<IEnumerable<MessageDTO>> GetMessagesAsync(long receiverId, long msgIdOffset, int count);
-    Task DeleteMessageAsync(long messageId);
+    Task DeleteMessageAsync(long messageId, long userId);
     Task UpdateMessageAsync(MessageDTO message);
     Task<long> GetLastMessageId();
     List<DialogStruct> GetDialogsForUser(long authorizedRequestUserId, long requestLastMessageId);
@@ -51,15 +51,18 @@ public class MessageRepository : IMessageRepository{
         throw new NotImplementedException();
     }
 
-    public Task DeleteMessageAsync(long messageId) {
-        var message = _context.Messages.First(m => m.MessageId == messageId);
-        message.isDeleted = true;
+    public Task UpdateMessageAsync(MessageDTO message) {
+        var messageToUpdate = _context.Messages.FirstOrDefault(m => m.MessageId == message.TargetId);
+        if (messageToUpdate != null && messageToUpdate.UserId == message.UserId)
+        {
+            messageToUpdate.EditFromDTO(message);
+        }
         return _context.SaveChangesAsync();
     }
 
-    public Task UpdateMessageAsync(MessageDTO message) {
-        var messageToUpdate = _context.Messages.First(m => m.MessageId == message.MessageId);
-        messageToUpdate.EditFromDTO(message);
+    public Task DeleteMessageAsync(long messageId, long userId) {
+        var message = _context.Messages.First(m => m.MessageId == messageId);
+        message.isDeleted = true;
         return _context.SaveChangesAsync();
     }
 
@@ -94,7 +97,7 @@ public class MessageRepository : IMessageRepository{
             .Where(m => m.UserId == authorizedRequestUserId || m.UserId == authorizedRequestRequest.DialogId)
             .Where(m => m.ReceiverId == authorizedRequestUserId || m.ReceiverId == authorizedRequestRequest.DialogId)
             .Where(m => m.MessageId >= authorizedRequestRequest.LastMessageId)
-            .OrderByDescending(m => m.MessageId)
+            .OrderByDescending(m => m.Timestamp)
             .Skip(authorizedRequestRequest.Offset)
             .Take(authorizedRequestRequest.Count)
             .Select(m => new MessageDTO(m))

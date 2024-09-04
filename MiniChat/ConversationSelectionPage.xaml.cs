@@ -19,5 +19,11 @@ namespace MiniChat
             viewModel.RequestMessages();
             base.OnNavigatedTo(args);
         }
+        protected override void OnAppearing()
+        {
+            OnPropertyChanged(nameof(Model.Conversation));
+
+            base.OnAppearing();
+        }
     }
 }

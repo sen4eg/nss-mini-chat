@@ -9,7 +9,9 @@ public class MessageDTO {
         this.Content = request.Request.Content;
         this.UserId = request.UserId;
         this.ReceiverId = request.Request.ReceiverId;
-        this.Timestamp = DateTime.UtcNow;
+        if (request.Request.Timestamp == null) {
+            this.Timestamp = DateTime.UtcNow;
+        } else this.Timestamp = request.Request.Timestamp.ToDateTime();
         this.ResponseToId = request.Request.ResponsesTo;
         this.MessageType = request.Request.MsgType;
         this.IsEdited = request.Request.IsEdited;
@@ -20,7 +22,7 @@ public class MessageDTO {
         this.Content = databaseMessage.Content;
         this.UserId = databaseMessage.UserId;
         this.ReceiverId = databaseMessage.ReceiverId;
-        this.Timestamp = DateTime.UtcNow;
+        this.Timestamp = databaseMessage.Timestamp;
         this.ResponseToId = databaseMessage.ResponseToId;
         this.MessageType = databaseMessage.MessageType;
         this.IsEdited = databaseMessage.isEdited;

@@ -189,18 +189,18 @@ namespace MiniServer.Core {
                         });
                         break;
                     }
-                case CommunicationRequest.ContentOneofCase.DeleteMessage:
-                    {
-                        var evnt = _commEventFactory.Create<DeleteMessageEvent, AuthorizedRequest<DeleteMessageRequest>>(
-                            new AuthorizedRequest<DeleteMessageRequest>(Convert.ToInt64(userId), msg.DeleteMessage, user),
-                            () => _logger.LogInformation($"Message deleted by {userId}"));
-                        var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<DeleteMessageRequest>>();
-                        _eventDispatcher.EnqueueEvent(async () =>
-                        {
-                            await evnt.Execute(taskCompletionSource);
-                        });
-                        break;
-                    }
+                // case CommunicationRequest.ContentOneofCase.DeleteMessage:
+                //     {
+                //         var evnt = _commEventFactory.Create<DeleteMessageEvent, AuthorizedRequest<DeleteMessageRequest>>(
+                //             new AuthorizedRequest<DeleteMessageRequest>(Convert.ToInt64(userId), msg.DeleteMessage, user),
+                //             () => _logger.LogInformation($"Message deleted by {userId}"));
+                //         var taskCompletionSource = new TaskCompletionSource<AuthorizedRequest<DeleteMessageRequest>>();
+                //         _eventDispatcher.EnqueueEvent(async () =>
+                //         {
+                //             await evnt.Execute(taskCompletionSource);
+                //         });
+                //         break;
+                //     }
                 case CommunicationRequest.ContentOneofCase.RequestUpdate:
                     {
                         var evnt = _commEventFactory.Create<RequestUpdateEvent, AuthorizedRequest<RequestUpdate>>(

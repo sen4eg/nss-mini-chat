@@ -70,10 +70,12 @@ namespace MiniChat.ViewModel
             }
             else
             {
-                communicationRequest.EditMessage = new MiniProtoImpl.EditMessageRequest
+                communicationRequest.Message = new MiniProtoImpl.Message
                 {
-                    Id = editedMessage.Id,
-                    Message = MessageText,
+                    TargetId = editedMessage.Id,
+                    ReceiverId = ConversationObject.ContactID,
+                    Content = MessageText,
+                    MsgType = 1
                 };
                 ClearEdit();
             }  
@@ -100,9 +102,10 @@ namespace MiniChat.ViewModel
             CommunicationRequest communicationRequest = new()
             {
                 Token = state.SessionToken,
-                DeleteMessage = new DeleteMessageRequest
+                Message = new MiniProtoImpl.Message
                 {
-                    Id = message.Id,
+                    TargetId = message.Id,
+                    MsgType = 2,
                 }
             };
 

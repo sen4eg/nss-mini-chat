@@ -185,6 +185,7 @@ message CommunicationRequest {
         RemoveMemberRequest remove_member = 6;
         
         RequestUpdate request_update = 8; // requested once on connection
+        
         RequestDialog request_dialog = 9;
         
         SearchRequest search = 11;
