@@ -7,6 +7,8 @@ namespace MiniChat
         public ConversationPage(ConversationViewModel vm)
         {
             BindingContext = vm;
+
+            vm.MessageCollectionDynamicHeight = this.Height - 100;
             InitializeComponent();
         }
     }

@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MiniChat.MainPage">
-
+             x:Class="MiniChat.MainPage"
+             xmlns:viewmodel="clr-namespace:MiniChat.ViewModel"
+             x:DataType="viewmodel:MainViewModel">
     <ScrollView>
         <VerticalStackLayout
             Padding="30,0"
@@ -24,21 +25,35 @@
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
 
-            <Button
+            <Grid RowDefinitions="*, *, *, *" ColumnDefinitions="*, *" ColumnSpacing="8" RowSpacing="8">
+                <Label Grid.Row="0" Grid.Column="0" Text="Server IP:"/>
+                <Label Grid.Row="0" Grid.Column="1" Text="Server Port:"/>
+                <Entry Grid.Row="1" Grid.Column="0" Text="{Binding ServerIP}"/>
+                <Entry Grid.Row="1" Grid.Column="1" Text="{Binding ServerPort}"/>
+                <Button
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
                 x:Name="ConnectBtn"
                 Text="Connect"
-                Clicked="OnConnectClicked"
+                Command="{Binding ConnectCommand}"
                 HorizontalOptions="Fill" />
-
-            <Label x:Name="response_field" />
-
-            <Button
+                <Button
+                    Grid.Row="3"
+                    Grid.ColumnSpan="2"
                  x:Name="LoginBtn"
                  Text="Login" 
-                 IsEnabled="False"
+                 IsEnabled="{Binding EnableLogin}"
                  SemanticProperties.Hint="Login page"
-                 Clicked="OnLoginClickedAsync"
+                 Command="{Binding LoginButtonCommand}"
                  HorizontalOptions="Fill" />    
+            </Grid>
+            
+            
+            <!--
+            <Label x:Name="response_field" />
+            -->
+            
+            
         </VerticalStackLayout>
     </ScrollView>
 

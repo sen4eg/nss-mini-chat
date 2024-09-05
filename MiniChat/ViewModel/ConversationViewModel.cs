@@ -2,14 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using MiniChat.Model;
 using MiniProtoImpl;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MiniChat.ViewModel
 {
@@ -19,6 +12,10 @@ namespace MiniChat.ViewModel
     /// </summary>
     public partial class ConversationViewModel : ObservableObject, IQueryAttributable
     {
+        [ObservableProperty]
+        private double messageCollectionDynamicHeight;
+
+        public double WindowHeight;
 
         [ObservableProperty]
         private Conversation? conversationObject = null;

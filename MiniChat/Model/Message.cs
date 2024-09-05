@@ -23,7 +23,6 @@ namespace MiniChat.Model
 
         public long Recipient = recipient;
         public String Contents { get; set; } = contents;
-        // TODO add timestamp
         public bool IsReceived { get => Recipient == ClientState.GetState().UserID; }
         public Timestamp Timestamp { get; internal set; } = timestamp;
     }

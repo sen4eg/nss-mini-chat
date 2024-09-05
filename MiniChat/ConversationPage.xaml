@@ -7,16 +7,18 @@
              xmlns:viewModel="clr-namespace:MiniChat.ViewModel"
              x:DataType="viewModel:ConversationViewModel">
 
-    <Grid RowDefinitions="Auto, *"
-          Padding="8">
-
         <!-- TODO wrapping refresh view -->
-        
-        <CollectionView ItemsSource="{Binding ConversationObject.Messages}" >
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding MessageCollectionDynamicHeight}"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <CollectionView ItemsSource="{Binding ConversationObject.Messages}" VerticalOptions="FillAndExpand">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type local:Message}">
+                    <!-- TODO add swipe menu for android -->
                     <ScrollView>
-                        <!-- TODO add swipe menu for android -->
                         <Frame Margin="3" CornerRadius="25">
                             <Frame.Style>
                                 <Style TargetType="Frame">
@@ -38,15 +40,15 @@
                                 <FlyoutBase.ContextFlyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem
-                                                 Text="Edit"
-                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationViewModel}}, Path=MarkForEditCommand}"
-                                                 CommandParameter="{Binding .}"
-                                                 />
+                                                         Text="Edit"
+                                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationViewModel}}, Path=MarkForEditCommand}"
+                                                         CommandParameter="{Binding .}"
+                                                         />
                                         <MenuFlyoutItem
-                                                Text="Delete"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationViewModel}}, Path=DeleteMessageCommand}"
-                                                CommandParameter="{Binding .}"                                            
-                                                 />
+                                                        Text="Delete"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:ConversationViewModel}}, Path=DeleteMessageCommand}"
+                                                        CommandParameter="{Binding .}"                                            
+                                                         />
                                         <!-- TODO bind to function -->
                                     </MenuFlyout>
                                 </FlyoutBase.ContextFlyout>
@@ -65,13 +67,15 @@
                             </Label>
                         </Frame>
                     </ScrollView>
+                    
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        
-        <Entry x:Name="editor"
-                   Grid.Row="1"
+        <Entry 
+            Grid.Row="1"
+            x:Name="editor"                
                    VerticalOptions="End"
+                   HorizontalOptions="Fill"
                    Keyboard="Chat"
                    Placeholder="Message"
                    Text="{Binding MessageText}"
