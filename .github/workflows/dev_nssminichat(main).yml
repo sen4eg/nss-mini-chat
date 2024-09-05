@@ -20,9 +20,10 @@ jobs:
 
       - name: Ensure working directory
         run: |
-          echo "Current directory: $(pwd)"
-          echo "Listing contents:"
-          ls -la
+          Write-Host "Current directory: $(Get-Location)"
+          Write-Host "Listing contents:"
+          Get-ChildItem
+        shell: pwsh
         working-directory: ./MiniServer
 
       - name: Build with dotnet
@@ -32,13 +33,14 @@ jobs:
       - name: dotnet publish
         working-directory: ./MiniServer
         run: |
-          if [ -d "${{env.DOTNET_ROOT}}" ]; then
-            echo "Publishing to ${{env.DOTNET_ROOT}}/myapp"
+          if (Test-Path "${{env.DOTNET_ROOT}}") {
+            Write-Host "Publishing to ${{env.DOTNET_ROOT}}/myapp"
             dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
-          else
-            echo "DOTNET_ROOT is not set or directory doesn't exist"
+          } else {
+            Write-Host "DOTNET_ROOT is not set or directory doesn't exist"
             exit 1
-          fi
+          }
+        shell: pwsh
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
