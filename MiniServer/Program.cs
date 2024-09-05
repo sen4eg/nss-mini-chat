@@ -23,19 +23,21 @@ namespace MiniServer
             
             builder.Services.AddSingleton<ICommEventFactory, CommEventFactory>();
             builder.Services.AddSingleton<EventDispatcher>();
+            builder.Services.AddSingleton<IConnectionManager, ConnectionManager>();
+
+            
             builder.Services.AddTransient<IConnectionLogicService, ConnectionLogicService>(); // Register the business logic service
             builder.Services.AddTransient<IAuthenticationService, AuthenticationService>(); // Register the business logic service
             builder.Services.AddTransient<ChatService>(); // Register the gRPC service
-            builder.Services.AddSingleton<IGroupService, GroupService>();
+            builder.Services.AddTransient<IGroupService, GroupService>();
             
-            builder.Services.AddSingleton<IUserRepository, UserRepository>();
-            builder.Services.AddSingleton<IMessageRepository, MessageRepository>();
-            builder.Services.AddSingleton<IContactRepository, ContactRepository>();
-            builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
-            builder.Services.AddSingleton<IValidationTokenRepository, ValidationTokenRepository>();
+            builder.Services.AddTransient<IUserRepository, UserRepository>();
+            builder.Services.AddTransient<IMessageRepository, MessageRepository>();
+            builder.Services.AddTransient<IContactRepository, ContactRepository>();
+            builder.Services.AddTransient<IGroupRepository, GroupRepository>();
+            builder.Services.AddTransient<IValidationTokenRepository, ValidationTokenRepository>();
             
-            builder.Services.AddSingleton<IMessagingService, MessagingService>();
-            builder.Services.AddSingleton<IConnectionManager, ConnectionManager>();
+            builder.Services.AddTransient<IMessagingService, MessagingService>();
             builder.Services.AddTransient<IPersistenceService, PersistenceService>();
             builder.Services.AddTransient<IContactService, ContactService>();
             builder.Services.AddTransient<ISearchService, SearchService>();

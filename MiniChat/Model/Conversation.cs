@@ -33,16 +33,46 @@ namespace MiniChat.Model
             //SortMessages();
         }
 
-/*        private void SortMessages()
+        internal void MessageEdited(MiniProtoImpl.Message message)
         {
-            var sorted = Messages.OrderByDescending(message => message.Timestamp).ToList(); // Why descending bruh
-            Messages.Clear();
-            foreach (var message in sorted)
+            for (int i = 0; i < Messages.Count; i++)
             {
-                Messages.Add(message);
+                if (Messages[i].Id == message.TargetId)
+                {
+                    Messages[i].Contents = message.Content;
+                    
+                    break;
+                }
             }
         }
-*/
+
+        internal void RemoveMessage(long targetId)
+        {
+            int index = -1;
+            for (int i = 0; i < Messages.Count; i++)
+            {
+                if (Messages[i].Id == targetId)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            if (index != -1)
+            {
+                Messages.RemoveAt(index);
+            }
+        }
+
+        /*        private void SortMessages()
+                {
+                    var sorted = Messages.OrderByDescending(message => message.Timestamp).ToList(); // Why descending bruh
+                    Messages.Clear();
+                    foreach (var message in sorted)
+                    {
+                        Messages.Add(message);
+                    }
+                }
+        */
         public long ContactID = contactID;
         public long UnreadCount = unreadCount;
         

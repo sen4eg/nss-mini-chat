@@ -19,6 +19,7 @@ public class MessageDTO {
     }
     
     public MessageDTO(Data.Model.Message databaseMessage) {
+        this.MessageId = databaseMessage.MessageId;
         this.Content = databaseMessage.Content;
         this.UserId = databaseMessage.UserId;
         this.ReceiverId = databaseMessage.ReceiverId;

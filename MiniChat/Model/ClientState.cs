@@ -139,7 +139,7 @@ namespace MiniChat.Model
             Trace.WriteLine("Started listener thread");
             while (true)
             {
-                await foreach(CommunicationResponse response in ResponseStreamReader)
+                await foreach(CommunicationResponse response                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            in ResponseStreamReader)
                 {
                     switch (response.ContentCase)
                     {
@@ -152,17 +152,9 @@ namespace MiniChat.Model
                         break;
                         // response to receiving a message
                         case CommunicationResponse.ContentOneofCase.Message:
-                            var message = response.Message;
-                            foreach(Conversation conversation in Conversations)
-                            {
-                                if(conversation.ContactID == message.ReceiverId)
-                                {
-                                    conversation.Messages.Add(new Message(message));
-                                    break;
-                                }
-                            }
+                            HandleRecievedMessage(response);
                             // TODO what should happen if no conversation is found
-                        break;
+                            break;
 
                         case CommunicationResponse.ContentOneofCase.DialogUpdate:
                             foreach(Conversation conversation in Conversations)
@@ -190,6 +182,39 @@ namespace MiniChat.Model
                     }
                     Trace.WriteLine(response.ToString());
                 }
+            }
+        }
+
+        private void HandleRecievedMessage(CommunicationResponse response)
+        {
+            var message = response.Message;
+            bool conversationExists = false;
+            foreach (Conversation conversation in Conversations)
+            {
+                if (conversation.ContactID == message.ReceiverId)
+                {
+                    switch (message.MsgType)
+                    {
+                        case 0:
+                            conversation.AddMessage(new Message(message));
+                            break;
+                        case 1:
+                            conversation.MessageEdited(message);
+                            break;
+                        case 2:
+                            conversation.RemoveMessage(message.TargetId);
+                            break;
+                        default:
+                            Trace.WriteLine("Received message with unknown type");
+                            break;
+                    }
+                    conversationExists = true;
+                    break;
+                }
+            }
+            if (!conversationExists)
+            {
+                Conversations.Add(new Conversation(message.AuthorId, message.AuthorId.ToString(), new Message(message), 1));
             }
         }
     }

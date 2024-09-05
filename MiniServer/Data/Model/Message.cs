@@ -37,7 +37,7 @@ public class Message
     public void EditFromDTO(MessageDTO message) {
         this.Content = message.Content;
         this.isEdited = true;
-        this.Timestamp = DateTime.UtcNow;
+        // this.Timestamp = DateTime.UtcNow;
         this.ResponseToId = message.ResponseToId;
     }
 }

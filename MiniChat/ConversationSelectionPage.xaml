@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MiniChat.Model"
              x:Class="MiniChat.ConversationSelectionPage"
              Title="ConversationSelectionPage"
              xmlns:viewModel="clr-namespace:MiniChat.ViewModel"
              x:DataType="viewModel:ConversationSelectionViewModel">
     <ScrollView>
     <VerticalStackLayout Padding="24, 4">
-        <CollectionView ItemsSource="{Binding Conversations}" x:DataType="{x:Null}">
+        <CollectionView ItemsSource="{Binding Conversations}">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="local:Conversation">
                     <Frame BorderColor="Black" Padding="5" Margin="8">
                         <!-- Add Gesture Recognizers for clicking on a conversation -->
                             <Frame.GestureRecognizers>

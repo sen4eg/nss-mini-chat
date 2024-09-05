@@ -61,7 +61,11 @@ public class MessageRepository : IMessageRepository{
     }
 
     public Task DeleteMessageAsync(long messageId, long userId) {
-        var message = _context.Messages.First(m => m.MessageId == messageId);
+        var message = _context.Messages.FirstOrDefault(m => m.MessageId == messageId);
+        if (message == null || message.UserId != userId)
+        {
+            return Task.CompletedTask;
+        }
         message.isDeleted = true;
         return _context.SaveChangesAsync();
     }
@@ -89,24 +93,23 @@ public class MessageRepository : IMessageRepository{
             .ToList();
 
         return result;
-    }
+    }           
 
     public DialogBodyStruct GetMessagesForUser(long authorizedRequestUserId, RequestDialog authorizedRequestRequest)
     {
         var list = _context.Messages
             .Where(m => m.UserId == authorizedRequestUserId || m.UserId == authorizedRequestRequest.DialogId)
             .Where(m => m.ReceiverId == authorizedRequestUserId || m.ReceiverId == authorizedRequestRequest.DialogId)
-            .Where(m => m.MessageId >= authorizedRequestRequest.LastMessageId)
+            .Where(m => m.MessageId <= authorizedRequestRequest.LastMessageId)
             .OrderByDescending(m => m.Timestamp)
             .Skip(authorizedRequestRequest.Offset)
             .Take(authorizedRequestRequest.Count)
             .Select(m => new MessageDTO(m))
             .ToList();
+        
         if (list.Count == 0)
         {
-            // Handle case where no messages are found
-            // You can throw an exception, return null, or handle it as appropriate
-            throw new InvalidOperationException("No messages found for the specified criteria.");
+            return new DialogBodyStruct(authorizedRequestRequest.DialogId, authorizedRequestRequest.LastMessageId, list);
         }
 
         var lastMessage = list.Last(); // This assumes list has at least one element

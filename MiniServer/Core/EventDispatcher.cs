@@ -14,7 +14,9 @@ namespace MiniServer.Core {
             _logger = logger;
             _threads = new Thread[threadCount];
             for (int i = 0; i < threadCount; i++) {
-                _threads[i] = new Thread(DispatchLoop);
+                _threads[i] = new Thread(DispatchLoop) {
+                    Name = $"EventDispatcherThread-{i}"
+                };
                 // _threads[i].Start();
             }
         }
