@@ -18,19 +18,33 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      - name: Ensure working directory
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Listing contents:"
+          ls -la
+        working-directory: ./MiniServer
+
       - name: Build with dotnet
         working-directory: ./MiniServer
         run: dotnet build --configuration Release
 
       - name: dotnet publish
         working-directory: ./MiniServer
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: |
+          if [ -d "${{env.DOTNET_ROOT}}" ]; then
+            echo "Publishing to ${{env.DOTNET_ROOT}}/myapp"
+            dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+          else
+            echo "DOTNET_ROOT is not set or directory doesn't exist"
+            exit 1
+          fi
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: "${{env.DOTNET_ROOT}}/myapp"
 
   deploy:
     runs-on: windows-latest
