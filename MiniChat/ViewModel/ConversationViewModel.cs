@@ -36,6 +36,9 @@ namespace MiniChat.ViewModel
         /// </summary>
         private Model.Message? editedMessage = null;
 
+        [ObservableProperty]
+        private bool isEditing = false;
+
         [RelayCommand]
         void Submit()
         {
@@ -85,12 +88,15 @@ namespace MiniChat.ViewModel
         {
             editedMessage = message;
             MessageText = message.Contents;
+            IsEditing = true;
         }
 
         [RelayCommand]
         void ClearEdit()
         {
             editedMessage = null;
+            MessageText = string.Empty;
+            IsEditing = false;
         }
 
         [RelayCommand]

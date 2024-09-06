@@ -22,7 +22,9 @@ namespace MiniChat.Model
         public long Sender { get; set; } = sender;
 
         public long Recipient = recipient;
-        public String Contents { get; set; } = contents;
+
+        [ObservableProperty]
+        private String contents = contents;
         public bool IsReceived { get => Recipient == ClientState.GetState().UserID; }
         public Timestamp Timestamp { get; internal set; } = timestamp;
     }
