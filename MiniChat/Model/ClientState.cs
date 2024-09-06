@@ -139,7 +139,7 @@ namespace MiniChat.Model
             Trace.WriteLine("Started listener thread");
             while (true)
             {
-                await foreach(CommunicationResponse response                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            in ResponseStreamReader)
+                await foreach(CommunicationResponse response in ResponseStreamReader)
                 {
                     switch (response.ContentCase)
                     {

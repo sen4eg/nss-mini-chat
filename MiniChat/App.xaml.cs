@@ -1,22 +1,15 @@
-﻿namespace MiniChat
+﻿using System.Diagnostics;
+
+namespace MiniChat
 {
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
-            Application.Current.UserAppTheme = AppTheme.Light;
+            // Force light theme
             MainPage = new AppShell();
-        }
-
-        protected override Window CreateWindow(IActivationState activationState)
-        {
-            Window window = base.CreateWindow(activationState);
-
-            // Manipulate Window object
-            window.Height = 720;
-
-            return window;
+            Current.UserAppTheme = AppTheme.Light;
         }
     }
 }

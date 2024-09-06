@@ -13,6 +13,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="{Binding MessageCollectionDynamicHeight}"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <CollectionView ItemsSource="{Binding ConversationObject.Messages}" VerticalOptions="FillAndExpand">
             <CollectionView.ItemTemplate>
@@ -67,12 +68,23 @@
                             </Label>
                         </Frame>
                     </ScrollView>
-                    
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Entry 
+        <Label 
+            Padding="8,0,0,4"
             Grid.Row="1"
+            Text="You are editing a message. Click here to stop editing"
+            FontSize="Caption"
+            IsVisible="{Binding IsEditing}"
+            IsEnabled="{Binding IsEditing}">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ClearEditCommand}"/>
+            </Label.GestureRecognizers>
+        </Label>
+        <Entry 
+            Grid.Row="2"
             x:Name="editor"                
                    VerticalOptions="End"
                    HorizontalOptions="Fill"
