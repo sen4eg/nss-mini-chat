@@ -202,6 +202,7 @@ namespace MiniChat.Model
                             conversation.MessageEdited(message);
                             break;
                         case 2:
+                            if (message.AuthorId != UserID) return;
                             conversation.RemoveMessage(message.TargetId);
                             break;
                         default:
