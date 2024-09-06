@@ -83,6 +83,7 @@ public class MessageRepository : IMessageRepository{
     public List<DialogStruct> GetDialogsForUser(long authorizedRequestUserId, long requestLastMessageId) {
         var result = _context.Messages
             .Where(m => m.ReceiverId == authorizedRequestUserId && m.MessageId >= requestLastMessageId && !m.isDeleted)
+            .Where(m => m.MessageType == 0)
             .OrderBy(m => m.MessageId)
             .GroupBy(m => m.UserId)
             .Select(g => new DialogStruct(
@@ -101,6 +102,7 @@ public class MessageRepository : IMessageRepository{
             .Where(m => m.UserId == authorizedRequestUserId || m.UserId == authorizedRequestRequest.DialogId)
             .Where(m => m.ReceiverId == authorizedRequestUserId || m.ReceiverId == authorizedRequestRequest.DialogId)
             .Where(m => m.MessageId <= authorizedRequestRequest.LastMessageId && !m.isDeleted)
+            .Where(m => m.MessageType == 0)
             .OrderByDescending(m => m.Timestamp)
             .Skip(authorizedRequestRequest.Offset)
             .Take(authorizedRequestRequest.Count)
