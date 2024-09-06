@@ -23,22 +23,19 @@ public class MessagingService : IMessagingService {
     }
     
     private readonly ICommEventFactory _commEventFactory;
-    private readonly IMessageRepository _messageRepository;
-    private readonly IContactService _contactService;
-    private readonly IGroupService _groupService;
-    private readonly IGroupRepository _groupRepository;
+    private readonly IServiceScopeFactory _scopedServiceFactory;
+
 
     public MessagingService(ICommEventFactory commEventFactory, EventDispatcher eventDispatcher, 
-            IConnectionManager connectionManager, IMessageRepository repository, IContactService contactService,
-            IGroupService groupService, IGroupRepository groupRepository) {
+            IConnectionManager connectionManager, IServiceScopeFactory scopedServiceFactory) {
         _commEventFactory = commEventFactory;
         _eventDispatcher = eventDispatcher;
         _connectionManager = connectionManager;
-        _lastUsedMessageId = repository.GetLastMessageId().GetAwaiter().GetResult();// TODO check if this is correct
-        _messageRepository = repository;
-        _contactService = contactService;
-        _groupService = groupService;
-        _groupRepository = groupRepository;
+        using (var scope = scopedServiceFactory.CreateScope()) {
+            IMessageRepository repository = scope.ServiceProvider.GetRequiredService<IMessageRepository>();
+            _lastUsedMessageId = repository.GetLastMessageId().GetAwaiter().GetResult();
+        }
+        _scopedServiceFactory = scopedServiceFactory;
     }
 
 
@@ -55,66 +52,85 @@ public class MessagingService : IMessagingService {
         if (cons == null) {
             return Task.CompletedTask;
         }
-        List<Dialog> dialogs = _contactService.GetDialogsForUser(authorizedRequest.UserId);
-        ContactsMessage contactsMessage = new ContactsMessage {
-            Dialogs = { dialogs }
-        };
-        var response = new CommunicationResponse {
-            ContactsMessage = contactsMessage
-        };
-        foreach (var userConnection in cons) {
-            userConnection.ResponseStream.WriteAsync(response);
+
+        using (var scope = _scopedServiceFactory.CreateScope()){
+            var contactService = scope.ServiceProvider.GetRequiredService<IContactService>();
+            List<Dialog> dialogs = contactService.GetDialogsForUser(authorizedRequest.UserId);
+            ContactsMessage contactsMessage = new ContactsMessage {
+                Dialogs = { dialogs }
+            };
+            var response = new CommunicationResponse {
+                ContactsMessage = contactsMessage
+            };
+            foreach (var userConnection in cons) {
+                userConnection.ResponseStream.WriteAsync(response);
+            }
+            return Task.CompletedTask;
         }
-        return Task.CompletedTask;
+
     }
 
     public Task DialogRequested(AuthorizedRequest<RequestDialog> authorizedRequest) {
-        var dialog = _messageRepository.GetMessagesForUser(authorizedRequest.UserId, authorizedRequest.Request);
-        
-        var cons = _connectionManager.GetOpenedConnection(authorizedRequest.UserId);
-        if (cons == null) {
+        using (var scope = _scopedServiceFactory.CreateScope()) {
+
+            var messageRepository = scope.ServiceProvider.GetRequiredService<IMessageRepository>();
+            var dialog = messageRepository.GetMessagesForUser(authorizedRequest.UserId, authorizedRequest.Request);
+
+            var cons = _connectionManager.GetOpenedConnection(authorizedRequest.UserId);
+            if (cons == null) {
+                return Task.CompletedTask;
+            }
+
+            DialogBody dialogBody = new DialogBody {
+                ContactId = dialog.DialogId,
+                LastMessageId = dialog.lastMessageId,
+                Messages = { dialog.messages.Select(m => m.ConvertToGrpcMessage()) }
+            };
+            var response = new CommunicationResponse {
+                DialogUpdate = dialogBody
+            };
+            foreach (var userConnection in cons) {
+                userConnection.ResponseStream.WriteAsync(response);
+            }
+
             return Task.CompletedTask;
         }
-        DialogBody dialogBody = new DialogBody {
-            ContactId = dialog.DialogId,
-            LastMessageId = dialog.lastMessageId,
-            Messages = { dialog.messages.Select(m => m.ConvertToGrpcMessage()) }
-        };
-        var response = new CommunicationResponse {
-            DialogUpdate = dialogBody
-        };
-        foreach (var userConnection in cons) {
-            userConnection.ResponseStream.WriteAsync(response);
-        }
-        return Task.CompletedTask;
     }
 
     public Task HandleMsgSave(MessageDTO messageDto) {
-        switch (messageDto.MessageType) {
-            case 1: {
-                _messageRepository.UpdateMessageAsync(messageDto);
-                break;
+        using (var scope = _scopedServiceFactory.CreateScope()) {
+            var messageRepository = scope.ServiceProvider.GetRequiredService<IMessageRepository>();
+            switch (messageDto.MessageType) {
+                case 1: {
+                    messageRepository.UpdateMessageAsync(messageDto);
+                    break;
+                }
+                case 2:
+                    messageRepository.DeleteMessageAsync(messageDto.TargetId, messageDto.UserId);
+                    break;
             }
-            case 2:
-                _messageRepository.DeleteMessageAsync(messageDto.TargetId, messageDto.UserId);
-                break;
+
+            messageRepository.CreateMessageAsync(messageDto);
+            return Task.CompletedTask;
         }
-        _messageRepository.CreateMessageAsync(messageDto);
-        return Task.CompletedTask;
     }
 
     private void HandlePrivateMessage(AuthorizedRequest<Message> request) {
-        var msg = new MessageDTO(request);
-        msg.MessageId = GetNextMessageId();
-        
-        
-        var messageEvent = _commEventFactory.Create<MessagePersistanceEvent, MessageDTO>(msg, () => { });
-        var cons = _connectionManager.GetOpenedConnection(msg.ReceiverId);
-        var senderCons = _connectionManager.GetOpenedConnection(request.UserId);
-        FireMessage(senderCons, msg); // tell the sender the message was sent
-        FireMessage(cons, msg); // fire right away persist slowly
-        _eventDispatcher.EnqueueEvent(async () => await messageEvent.Execute(new TaskCompletionSource<MessageDTO>()));
-        _contactService.UpdateDialog(msg.UserId, msg.ReceiverId);
+        using (var scope = _scopedServiceFactory.CreateScope()) {
+            var contactService = scope.ServiceProvider.GetRequiredService<IContactService>();
+            var msg = new MessageDTO(request);
+            msg.MessageId = GetNextMessageId();
+
+
+            var messageEvent = _commEventFactory.Create<MessagePersistanceEvent, MessageDTO>(msg, () => { });
+            var cons = _connectionManager.GetOpenedConnection(msg.ReceiverId);
+            var senderCons = _connectionManager.GetOpenedConnection(request.UserId);
+            FireMessage(senderCons, msg); // tell the sender the message was sent
+            FireMessage(cons, msg); // fire right away persist slowly
+            _eventDispatcher.EnqueueEvent(
+                async () => await messageEvent.Execute(new TaskCompletionSource<MessageDTO>()));
+            if (msg.MessageType == 0) contactService.UpdateDialog(msg.UserId, msg.ReceiverId);
+        }
     }
 
     private static void FireMessage(IEnumerable<UserConnection>? userConnections, MessageDTO msg) {
@@ -134,19 +150,25 @@ public class MessagingService : IMessagingService {
     }
 
     private async Task HandleGroupMessage(AuthorizedRequest<Message> message) {
-        var group = await _groupRepository.GetGroup(message.Request.ReceiverId);
-        if (group == null) {
-            return;
+        using (var scope = _scopedServiceFactory.CreateScope()) {
+            var groupRepository = scope.ServiceProvider.GetRequiredService<IGroupRepository>();
+
+            var group = await groupRepository.GetGroup(message.Request.ReceiverId);
+            if (group == null) {
+                return;
+            }
+
+            var msg = new MessageDTO(message);
+            msg.MessageId = GetNextMessageId();
+            var messageEvent = _commEventFactory.Create<MessagePersistanceEvent, MessageDTO>(msg, () => { });
+            var members = group.GroupRoles.Select(g => g.UserId).ToList();
+            members.Add(group.CreatorUserId);
+            foreach (var groupUser in members) {
+                var cons = _connectionManager.GetOpenedConnection(groupUser);
+                FireMessage(cons, msg);
+            }
+
+            _eventDispatcher.Fire(messageEvent, new TaskCompletionSource<MessageDTO>());
         }
-        var msg = new MessageDTO(message);
-        msg.MessageId = GetNextMessageId();
-        var messageEvent = _commEventFactory.Create<MessagePersistanceEvent, MessageDTO>(msg, () => { });
-        var members = group.GroupRoles.Select(g => g.UserId).ToList();
-        members.Add(group.CreatorUserId);
-        foreach (var groupUser in members) {
-            var cons = _connectionManager.GetOpenedConnection(groupUser);
-            FireMessage(cons, msg);
-        }
-        
     }
 }

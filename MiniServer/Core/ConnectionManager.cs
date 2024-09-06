@@ -7,7 +7,6 @@ using MiniProtoImpl;
 using MiniServer.Core.Events;
 using MiniServer.Data.DTO;
 using MiniServer.Data.Model;
-using MiniServer.Data.Repository;
 using MiniServer.Services;
 using Npgsql.Replication.PgOutput.Messages;
 using Message = MiniProtoImpl.Message;
@@ -37,7 +36,6 @@ namespace MiniServer.Core {
         private const int DefaultPipeUnloadedAmount = 4;
         private const int DefaultPipeUnloadedDelayMs = 100;
         
-        private readonly IUserRepository _userRepository;
         private readonly IAuthenticationService _authenticationService;
         private readonly EventDispatcher _eventDispatcher;
         private readonly ILogger<ConnectionManager> _logger;
@@ -48,9 +46,8 @@ namespace MiniServer.Core {
 
         private readonly ICommEventFactory _commEventFactory;
         
-        public ConnectionManager(IUserRepository userRepository, IAuthenticationService authenticationService,
+        public ConnectionManager(IAuthenticationService authenticationService,
             EventDispatcher eventDispatcher, ILogger<ConnectionManager> logger, ICommEventFactory commEventFactory) {
-            _userRepository = userRepository;
             _authenticationService = authenticationService;
             _eventDispatcher = eventDispatcher;
             _logger = logger;
@@ -78,22 +75,28 @@ namespace MiniServer.Core {
         }
 
         public async Task HandlePipesUpdate() {
+            try {
 #if DEBUG
-            _logger.LogInformation("Handling pipes" + DateTime.Now);
+                _logger.LogInformation("Handling pipes" + DateTime.Now);
 #endif
-            foreach (var user in _connectedUsers) {
-                await HandleUserPipe(user);
-            }
-            var eventsInQueue = _eventDispatcher.GetLoad();
+                foreach (var user in _connectedUsers) {
+                    await HandleUserPipe(user);
+                }
+                var eventsInQueue = _eventDispatcher.GetLoad();
             
-            if (eventsInQueue <= _pipeEmptyAmount)
-            {
-                await Task.Delay(_pipeEmptyDelayMs);
+                if (eventsInQueue <= _pipeEmptyAmount)
+                {
+                    await Task.Delay(_pipeEmptyDelayMs);
+                }
+                else if (eventsInQueue < _pipeUnloadedAmount)
+                {
+                    await Task.Delay(_pipeUnloadedDelayMs);
+                }
             }
-            else if (eventsInQueue < _pipeUnloadedAmount)
-            {
-                await Task.Delay(_pipeUnloadedDelayMs);
+            catch (Exception e) {
+                Console.WriteLine(e);
             }
+
 
             // Enqueue the next HandlePipesUpdate event
             _eventDispatcher.EnqueueEvent(HandlePipesUpdate);

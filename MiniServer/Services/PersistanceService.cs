@@ -12,34 +12,51 @@ public interface IPersistenceService {
     Task<IEnumerable<T>> GetAllAsync<T>() where T : class;
 }
 public class PersistenceService : IPersistenceService {
-    private readonly ChatContext _context;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public PersistenceService(ChatContext context) {
-        _context = context;
+    public PersistenceService(IServiceScopeFactory serviceScopeFactory) {
+        _serviceScopeFactory = serviceScopeFactory;
+    }
+
+    private async Task<TContext> CreateContextAsync<TContext>() where TContext : DbContext {
+        // Create a new scope
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<TContext>();
+        return context;
     }
 
     public async Task SaveAsync<T>(T entity) where T : class {
-        var repository = new GenericRepository<T>(_context);
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ChatContext>();
+        var repository = new GenericRepository<T>(context);
         await repository.SaveAsync(entity);
     }
 
     public async Task UpdateAsync<T>(T entity) where T : class {
-        var repository = new GenericRepository<T>(_context);
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ChatContext>();
+        var repository = new GenericRepository<T>(context);
         await repository.UpdateAsync(entity);
     }
 
     public async Task DeleteAsync<T>(T entity) where T : class {
-        var repository = new GenericRepository<T>(_context);
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ChatContext>();
+        var repository = new GenericRepository<T>(context);
         await repository.DeleteAsync(entity);
     }
 
     public async Task<T> GetByIdAsync<T>(long id) where T : class {
-        var repository = new GenericRepository<T>(_context);
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ChatContext>();
+        var repository = new GenericRepository<T>(context);
         return await repository.GetByIdAsync(id);
     }
 
     public async Task<IEnumerable<T>> GetAllAsync<T>() where T : class {
-        var repository = new GenericRepository<T>(_context);
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ChatContext>();
+        var repository = new GenericRepository<T>(context);
         return await repository.GetAllAsync();
     }
 }

@@ -33,13 +33,10 @@ public class TokenIdentity {
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly IValidationTokenRepository _authenticationRepository;
-    private readonly IUserRepository _userRepository;
-
-    public AuthenticationService(IValidationTokenRepository authenticationRepository, IUserRepository userRepository)
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+    public AuthenticationService(IServiceScopeFactory serviceScopeFactory)
     {
-        _authenticationRepository = authenticationRepository;
-        _userRepository = userRepository;
+        _serviceScopeFactory = serviceScopeFactory;
     }
     public string GenerateToken(long uid)
     {
@@ -48,50 +45,60 @@ public class AuthenticationService : IAuthenticationService
     
     public string GenerateRefreshToken(string username, Device device)
     {
-        var refresh = TokenHelper.GenerateRefreshToken();
-        _authenticationRepository.StoreToken(username, device, refresh);
-        return refresh;
+        using (var scope = _serviceScopeFactory.CreateScope()) {
+            var _validationTokenRepository = scope.ServiceProvider.GetRequiredService<IValidationTokenRepository>();
+            var refresh = TokenHelper.GenerateRefreshToken();
+            _validationTokenRepository.StoreToken(username, device, refresh);
+            return refresh;
+            
+        }
+        
     }
 
     public async Task<ConnectResponse> RefreshTokenAsync(RefreshTokenRequest request)
     {
-        var foundToken = await _authenticationRepository.FindAuthRefreshToken(request.Name, request.Device);
-        if (foundToken == null)
-        {
-            return new ConnectResponse
-            {
-                IsSucceed = false,
-            };
-        }
+        using (var scope = _serviceScopeFactory.CreateScope()) {
+            var _validationTokenRepository = scope.ServiceProvider.GetRequiredService<IValidationTokenRepository>();
+            var foundToken = await _validationTokenRepository.FindAuthRefreshToken(request.Name, request.Device);
+            if (foundToken == null) {
+                return new ConnectResponse {
+                    IsSucceed = false,
+                };
+            }
 
-        return new ConnectResponse
-        {
-            IsSucceed = true,
-            Token = GenerateToken(foundToken.User.UserId),
-            RefreshToken = request.RefreshToken
-        };
+            return new ConnectResponse {
+                IsSucceed = true,
+                Token = GenerateToken(foundToken.User.UserId),
+                RefreshToken = request.RefreshToken
+            };
+            
+        }
     }
 
     public async Task<ConnectResponse> Authenticate(ConnectRequest request) {
-        var token = await _authenticationRepository.FindToken(request.Credentials.Name, request.Device);
-        var uid = await GetUidWithCredentials(request.Credentials);
-        if (uid == null)
-            return new ConnectResponse {
-                IsSucceed = false
-            };
-        long userId = uid.Value;
-        if (!string.IsNullOrEmpty(token)) {
+        using (var scope = _serviceScopeFactory.CreateScope()) {
+            var _validationTokenRepository = scope.ServiceProvider.GetRequiredService<IValidationTokenRepository>();
+            var token = await _validationTokenRepository.FindToken(request.Credentials.Name, request.Device);
+            var uid = await GetUidWithCredentials(request.Credentials);
+            if (uid == null)
+                return new ConnectResponse {
+                    IsSucceed = false
+                };
+            long userId = uid.Value;
+            if (!string.IsNullOrEmpty(token)) {
+                return new ConnectResponse {
+                    IsSucceed = true,
+                    Token = GenerateToken(userId),
+                    RefreshToken = token // Reuse the existing refresh token on same device
+                };
+            }
+
             return new ConnectResponse {
                 IsSucceed = true,
                 Token = GenerateToken(userId),
-                RefreshToken = token // Reuse the existing refresh token on same device
+                RefreshToken = GenerateRefreshToken(request.Credentials.Name, request.Device)
             };
         }
-        return new ConnectResponse {
-            IsSucceed = true,
-            Token = GenerateToken(userId),
-            RefreshToken = GenerateRefreshToken(request.Credentials.Name, request.Device)
-        };
     }
 
     public TokenIdentity GetIdentity(string token) {
@@ -100,6 +107,9 @@ public class AuthenticationService : IAuthenticationService
     }
 
     private async Task<long?> GetUidWithCredentials(Credentials requestCredentials) {
-        return await _userRepository.FindWithCredentials(requestCredentials.Name, requestCredentials.Password);
+        using (var scope = _serviceScopeFactory.CreateScope()) {
+            var _userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+            return await _userRepository.FindWithCredentials(requestCredentials.Name, requestCredentials.Password);
+        }
     }
 }

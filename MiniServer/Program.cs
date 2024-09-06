@@ -16,26 +16,51 @@ namespace MiniServer
 
             // Add services to the container.
             builder.Services.AddGrpc();
-            builder.Services.AddDbContext<ChatContext>(options =>
+            builder.Services.AddPooledDbContextFactory<ChatContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("ChatContext"));
-            }, ServiceLifetime.Singleton);
+                // options.AddInterceptors();
+                options.EnableSensitiveDataLogging(); // Если нужно
+            }, poolSize: 8);
+            
+            // builder.Services.AddDbContext<ChatContext>(options =>
+            // {
+            //     options.UseNpgsql(builder.Configuration.GetConnectionString("ChatContext"));
+            // }, ServiceLifetime.Scoped);
             
             builder.Services.AddSingleton<ICommEventFactory, CommEventFactory>();
             builder.Services.AddSingleton<EventDispatcher>();
             builder.Services.AddSingleton<IConnectionManager, ConnectionManager>();
-
             
             builder.Services.AddTransient<IConnectionLogicService, ConnectionLogicService>(); // Register the business logic service
             builder.Services.AddTransient<IAuthenticationService, AuthenticationService>(); // Register the business logic service
             builder.Services.AddTransient<ChatService>(); // Register the gRPC service
             builder.Services.AddTransient<IGroupService, GroupService>();
             
-            builder.Services.AddTransient<IUserRepository, UserRepository>();
-            builder.Services.AddTransient<IMessageRepository, MessageRepository>();
-            builder.Services.AddTransient<IContactRepository, ContactRepository>();
-            builder.Services.AddTransient<IGroupRepository, GroupRepository>();
-            builder.Services.AddTransient<IValidationTokenRepository, ValidationTokenRepository>();
+            builder.Services.AddScoped<IUserRepository>(provider =>
+            {
+                var factory = provider.GetRequiredService<IDbContextFactory<ChatContext>>();
+                return new UserRepository(factory.CreateDbContext());
+            });
+            builder.Services.AddScoped<IMessageRepository, MessageRepository>(provider =>
+            {
+                var factory = provider.GetRequiredService<IDbContextFactory<ChatContext>>();
+                return new MessageRepository(factory.CreateDbContext());
+            });
+            builder.Services.AddScoped<IContactRepository, ContactRepository>(provider => {
+                var factory = provider.GetRequiredService<IDbContextFactory<ChatContext>>();
+                return new ContactRepository(factory.CreateDbContext());
+            });
+
+            builder.Services.AddScoped<IGroupRepository, GroupRepository>(provider => {
+                var factory = provider.GetRequiredService<IDbContextFactory<ChatContext>>();
+                return new GroupRepository(factory.CreateDbContext());
+            });
+
+            builder.Services.AddScoped<IValidationTokenRepository, ValidationTokenRepository>(provider => {
+                var factory = provider.GetRequiredService<IDbContextFactory<ChatContext>>();
+                return new ValidationTokenRepository(factory.CreateDbContext());
+            });
             
             builder.Services.AddTransient<IMessagingService, MessagingService>();
             builder.Services.AddTransient<IPersistenceService, PersistenceService>();
@@ -47,10 +72,12 @@ namespace MiniServer
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<ChatContext>();
-                context.Database.Migrate();
+                var dbContextFactory = services.GetRequiredService<IDbContextFactory<ChatContext>>();
+                using (var context = dbContextFactory.CreateDbContext())
+                {
+                    context.Database.Migrate();
+                }
             }
-
             var dispatcher = app.Services.GetRequiredService<EventDispatcher>();
             dispatcher.Start(); // Start the dispatcher
 

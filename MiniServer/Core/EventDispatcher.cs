@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using MiniServer.Core.Events;
 
 namespace MiniServer.Core {
     public class EventDispatcher {
@@ -61,6 +62,10 @@ namespace MiniServer.Core {
             foreach (var thread in _threads) {
                 thread.Join();
             }
+        }
+
+        public void Fire<T>(EventBase<T> @event, TaskCompletionSource<T> tcs) {
+            EnqueueEvent(async () => await @event.Execute(tcs));
         }
     }
     

@@ -14,36 +14,44 @@ public interface ISearchService
 
 public class SearchService : ISearchService
 {
-    private readonly IUserRepository _userRepository;
-    public SearchService(IUserRepository userRepository) {
-        this._userRepository = userRepository;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
+    public SearchService(IServiceScopeFactory serviceScopeFactory) {
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
     public async Task Search(AuthorizedRequest<SearchRequest> searchRequest) {
-        // Search for users
-        var users = await _userRepository.SearchUsersAsync(searchRequest.Request.Query);
-        // Send users to the client
-        await searchRequest.UserConnection.ResponseStream.WriteAsync(new CommunicationResponse() {
-            SearchResponse = new SearchResponse {
-                Contacts = { users }
-            }
-        });
+        
+        using (var scope = _serviceScopeFactory.CreateScope()) {
+            var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+            var users = await userRepository.SearchUsersAsync(searchRequest.Request.Query);
+            // Send users to the client
+            await searchRequest.UserConnection.ResponseStream.WriteAsync(new CommunicationResponse() {
+                SearchResponse = new SearchResponse {
+                    Contacts = { users }
+                }
+            });
+        }
+
     }
 
     public async Task FetchUsers(AuthorizedRequest<FetchUserInfoRequest> authorizedRequest) {
-        var users = authorizedRequest.Request.Uids.Select(async id => {
-            var user = await _userRepository.FindById(id.ToString());
-            return new UserInfo() {
-                Username = user.Username,
-                Email = user.Email,
-                Status= "Stranger" // TODO contacts
-            };
-        });
-        await authorizedRequest.UserConnection.ResponseStream.WriteAsync(new CommunicationResponse() {
-            UserInfo = new UserInfoResponse() {
-                Users = { await Task.WhenAll(users) }
-            }
-        });
+        using (var scope = _serviceScopeFactory.CreateScope()) {
+            var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+            var users = authorizedRequest.Request.Uids.Select(async id => {
+                var user = await userRepository.FindById(id.ToString());
+                return new UserInfo() {
+                    Username = user.Username,
+                    Email = user.Email,
+                    Status = "Stranger" // TODO contacts
+                };
+            });
+            await authorizedRequest.UserConnection.ResponseStream.WriteAsync(new CommunicationResponse() {
+                UserInfo = new UserInfoResponse() {
+                    Users = { await Task.WhenAll(users) }
+                }
+            });
+        }
     }
 
     public Task SetUserStatus(AuthorizedRequest<SetPersonStatus> authorizedRequest) {

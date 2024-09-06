@@ -109,6 +109,7 @@ namespace MiniChat.ViewModel
                 {
                     TargetId = message.Id,
                     MsgType = 2,
+                    ReceiverId = ConversationObject.ContactID
                 }
             };
 
